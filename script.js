@@ -9,10 +9,10 @@ var bc = backCanvas.getContext("2d");
 
 backCanvas.width = 1920;
 backCanvas.height = 1080;
-foreCanvas.width = 1920;
-foreCanvas.height = 1080;
-foreCanvas2.width = 1920;
-foreCanvas2.height = 1080;
+player1C.width = 1920;
+player1C.height = 1080;
+player2C.width = 1920;
+player2C.height = 1080;
 
 const groundHeight = 700;
 
@@ -25,13 +25,19 @@ var player1 = {
     momentumY:0,
     gravity: 1,
     goingUp:false,
-    canvas:foreCanvas.getContext("2d"),
+    canvas:player1C.getContext("2d"),
     crouching:false,
     height:2,
     color:"red",
     images:{
-        idle: new Image()
-    }
+        idle1: new Image(),
+        idle2: new Image(),
+        walk1: new Image(),
+        walk2: new Image(),
+        walk3: new Image(),
+        walk4: new Image()
+    },
+    current:undefined
 }
 
 var player2 = {
@@ -43,15 +49,38 @@ var player2 = {
     momentumY:0,
     gravity: 1,
     goingUp:false,
-    canvas:foreCanvas2.getContext("2d"),
+    canvas:player2C.getContext("2d"),
     crouching:false,
     height:2,
     color:"blue",
     images:{
-        idle: new Image()
-    }
+        idle1: new Image(),
+        idle2: new Image(),
+        walk1: new Image(),
+        walk2: new Image(),
+        walk3: new Image(),
+        walk4: new Image()
+    },
+    current:undefined
 }
 
+console.log(player1.images.walk1)
+player1.current = player1.images.idle1
+player2.current = player2.images.idle2
+player1.images.idle1.src = `Images/Player1/idle1.png`;
+player1.images.idle2.src = `Images/Player1/idle2.png`;
+player2.images.idle1.src = `Images/Player1/idle1.png`;
+player2.images.idle2.src = `Images/Player1/idle2.png`;
+
+player1.images.walk1.src = `Images/Player1/walk1.png`;
+player1.images.walk2.src = `Images/Player1/walk2.png`;
+player2.images.walk1.src = `Images/Player1/walk1.png`;
+player2.images.walk2.src = `Images/Player1/walk2.png`;
+
+player1.images.walk3.src = `Images/Player1/walk3.png`;
+player1.images.walk4.src = `Images/Player1/walk4.png`;
+player2.images.walk3.src = `Images/Player1/walk3.png`;
+player2.images.walk4.src = `Images/Player1/walk4.png`;
 
 player1.canvas.imageSmoothingEnabled = false;
 player2.canvas.imageSmoothingEnabled = false;
@@ -61,9 +90,12 @@ window.addEventListener("keydown",function(event){
     console.log(event)
     if(event.code === "KeyD" && player1.direction !== 1){
         player1.direction = 1;
+        player1.current = player1.images.walk1;
     }
     if(event.code === "KeyA" && player1.direction !== 2){
         player1.direction = 2;
+        player1.current = player1.images.walk3;
+
     }
     if(event.code === "KeyW" && player1.goingUp === false && player1.crouching === false){
         player1.momentumY = 20;
@@ -75,11 +107,13 @@ window.addEventListener("keydown",function(event){
     
     if(event.code === "ArrowRight" && player2.direction !== 1){
         player2.direction = 1;
+        player2.current = player2.images.walk1;
     }
     if(event.code === "ArrowLeft" && player2.direction !== 2){
         player2.direction = 2;
+        player2.current = player2.images.walk3;
     }
-    if(event.code === "ArrowUp" && player2.goingUp === false){
+    if(event.code === "ArrowUp" && player2.goingUp === false && player2.crouching === false){
         player2.momentumY = 20;
         player2.goingUp = true;
     }
@@ -91,9 +125,12 @@ window.addEventListener("keydown",function(event){
 window.addEventListener("keyup",function(event){
     if(event.code === "KeyD" && player1.direction === 1){
         player1.direction = 0;
+        player1.current = player1.images.idle1;
     }
     if(event.code === "KeyA" && player1.direction === 2){
         player1.direction = 0;
+        player1.current = player1.images.idle1;
+
     }
     if(event.code === "KeyS"){
         clearPlayer(player1);
@@ -104,9 +141,11 @@ window.addEventListener("keyup",function(event){
 
     if(event.code === "ArrowRight" && player2.direction === 1){
         player2.direction = 0;
+        player2.current = player2.images.idle1;
     }
     if(event.code === "ArrowLeft" && player2.direction === 2){
         player2.direction = 0;
+        player2.current = player2.images.idle1;
     }
     if(event.code === "ArrowDown"){
         clearPlayer(player2);
@@ -195,13 +234,65 @@ function crouch(p){
 }
 
 function paintPlayer(p){
-    p.canvas.fillStyle = p.color;
-    p.canvas.fillRect(p.x,p.y + p.size - p.size*p.height,p.size,p.size*p.height)
-    if (p.images.idle.complete) {
-        p.canvas.drawImage(p.images.idle, Math.floor(p.x),Math.floor(p.y + p.size - p.size*p.height),Math.floor(p.size),Math.floor(p.size*p.height));
-        p.images.idle.src = `Images/Player1/player1ImgIdle.png`;
+    //p.canvas.fillStyle = p.color;
+    //p.canvas.fillRect(p.x,p.y + p.size - p.size*p.height,p.size,p.size*p.height)
+    if (p.current.complete) {
+        p.canvas.drawImage(p.current, Math.floor(p.x),Math.floor(p.y + p.size - p.size*p.height),Math.floor(p.size),Math.floor(p.size*p.height));
     }
 }
 function clearPlayer(p){
     p.canvas.clearRect(p.x,p.y + p.size - p.size*p.height,p.size,p.size*p.height)
 }
+
+function animate(speed,p){
+    
+
+    setTimeout(() => {
+        animate(p,speed)
+    }, speed);
+    if(p.direction == 0){
+        if(p.current === p.images.idle1){
+            clearPlayer(p)
+            p.current = p.images.idle2
+            paintPlayer(p)
+            return
+        }
+        if(p.current === p.images.idle2){
+            clearPlayer(p)
+            p.current = p.images.idle1
+            paintPlayer(p)
+            return
+        }
+    }
+    if(p.direction == 1){
+        if(p.current === p.images.walk1){
+            clearPlayer(p)
+            p.current = p.images.walk2
+            paintPlayer(p)
+            return
+        }
+        if(p.current === p.images.walk2){
+            clearPlayer(p)
+            p.current = p.images.walk1
+            paintPlayer(p)
+            return
+        }
+    }
+    if(p.direction == 2){
+        if(p.current === p.images.walk3){
+            clearPlayer(p)
+            p.current = p.images.walk4
+            paintPlayer(p)
+            return
+        }
+        if(p.current === p.images.walk4){
+            clearPlayer(p)
+            p.current = p.images.walk3
+            paintPlayer(p)
+            return
+        }
+    }
+}
+
+animate(300,player1)
+animate(300,player2)
