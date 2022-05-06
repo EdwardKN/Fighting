@@ -1,1 +1,3 @@
 # Fighting
+
+New Game
