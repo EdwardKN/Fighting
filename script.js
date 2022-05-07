@@ -35,7 +35,8 @@ var player1 = {
         walk1: new Image(),
         walk2: new Image(),
         walk3: new Image(),
-        walk4: new Image()
+        walk4: new Image(),
+        jump: new Image()
     },
     current:undefined
 }
@@ -59,7 +60,8 @@ var player2 = {
         walk1: new Image(),
         walk2: new Image(),
         walk3: new Image(),
-        walk4: new Image()
+        walk4: new Image(),
+        jump: new Image()
     },
     current:undefined
 }
@@ -69,18 +71,21 @@ player1.current = player1.images.idle1
 player2.current = player2.images.idle2
 player1.images.idle1.src = `Images/Player1/idle1.png`;
 player1.images.idle2.src = `Images/Player1/idle2.png`;
-player2.images.idle1.src = `Images/Player1/idle1.png`;
-player2.images.idle2.src = `Images/Player1/idle2.png`;
+player2.images.idle1.src = `Images/Player2/idle1.png`;
+player2.images.idle2.src = `Images/Player2/idle2.png`;
 
 player1.images.walk1.src = `Images/Player1/walk1.png`;
 player1.images.walk2.src = `Images/Player1/walk2.png`;
-player2.images.walk1.src = `Images/Player1/walk1.png`;
-player2.images.walk2.src = `Images/Player1/walk2.png`;
+player2.images.walk1.src = `Images/Player2/walk1.png`;
+player2.images.walk2.src = `Images/Player2/walk2.png`;
 
 player1.images.walk3.src = `Images/Player1/walk3.png`;
 player1.images.walk4.src = `Images/Player1/walk4.png`;
-player2.images.walk3.src = `Images/Player1/walk3.png`;
-player2.images.walk4.src = `Images/Player1/walk4.png`;
+player2.images.walk3.src = `Images/Player2/walk3.png`;
+player2.images.walk4.src = `Images/Player2/walk4.png`;
+
+player1.images.jump.src = `Images/Player1/jump.png`;
+player2.images.jump.src = `Images/Player2/jump.png`;
 
 player1.canvas.imageSmoothingEnabled = false;
 player2.canvas.imageSmoothingEnabled = false;
@@ -212,14 +217,34 @@ function moveLeft(p){
 
 function moveUp(p){
     clearPlayer(p)
+    if(p.direction === 0){
+        p.current = p.images.jump;
+    }
+    if(p.direction === 1){
+        p.current = p.images.walk2;
+    }
+    if(p.direction === 2){
+        p.current = p.images.walk3;
+    }
     p.y -= p.momentumY;
     p.momentumY -= p.gravity;
     paintPlayer(p)
     if(p.y > groundHeight){
+        
         clearPlayer(p)
+        if(p.direction === 0){
+            p.current = p.images.idle1;
+        }
+        if(p.direction === 1){
+            p.current = p.images.walk1;
+        }
+        if(p.direction === 2){
+            p.current = p.images.walk4;
+        }
         p.y = groundHeight;
         paintPlayer(p)
         p.goingUp = false;
+        
     }
 }
 function crouch(p){
