@@ -36,7 +36,9 @@ var player1 = {
         walk2: new Image(),
         walk3: new Image(),
         walk4: new Image(),
-        jump: new Image()
+        jump: new Image(),
+        crouchIdle1: new Image(),
+        crouchIdle2: new Image()
     },
     current:undefined
 }
@@ -61,7 +63,9 @@ var player2 = {
         walk2: new Image(),
         walk3: new Image(),
         walk4: new Image(),
-        jump: new Image()
+        jump: new Image(),
+        crouchIdle1: new Image(),
+        crouchIdle2: new Image()
     },
     current:undefined
 }
@@ -87,6 +91,11 @@ player2.images.walk4.src = `Images/Player2/walk4.png`;
 player1.images.jump.src = `Images/Player1/jump.png`;
 player2.images.jump.src = `Images/Player2/jump.png`;
 
+player1.images.crouchIdle1.src = `Images/Player1/crouchIdle1.png`;
+player1.images.crouchIdle2.src = `Images/Player1/crouchIdle2.png`;
+player2.images.crouchIdle1.src = `Images/Player2/crouchIdle1.png`;
+player2.images.crouchIdle2.src = `Images/Player2/crouchIdle2.png`;
+
 player1.canvas.imageSmoothingEnabled = false;
 player2.canvas.imageSmoothingEnabled = false;
 
@@ -108,6 +117,7 @@ window.addEventListener("keydown",function(event){
     }
     if(event.code === "KeyS" && player1.goingUp === false){
         player1.crouching = true;
+        player1.current = player1.images.crouchIdle1
     }
     
     if(event.code === "ArrowRight" && player2.direction !== 1){
@@ -124,6 +134,8 @@ window.addEventListener("keydown",function(event){
     }
     if(event.code === "ArrowDown" && player2.goingUp === false){
         player2.crouching = true;
+        player2.current = player2.images.crouchIdle1
+
     }
 })
 
@@ -141,6 +153,8 @@ window.addEventListener("keyup",function(event){
         clearPlayer(player1);
         player1.crouching = false;
         player1.height = 2;
+        player1.current = player1.images.idle1
+
         paintPlayer(player1);
     }
 
@@ -156,6 +170,8 @@ window.addEventListener("keyup",function(event){
         clearPlayer(player2);
         player2.crouching = false;
         player2.height = 2;
+        player2.current = player2.images.idle1
+
         paintPlayer(player2);
     }
     
@@ -271,11 +287,17 @@ function clearPlayer(p){
 
 function animate(speed,p){
     
-
-    setTimeout(() => {
-        animate(p,speed)
-    }, speed);
-    if(p.direction == 0){
+    if(p.direction === 0){
+        setTimeout(() => {
+            animate(p,speed)
+        }, speed+ Math.random()*speed);
+    }else{
+        setTimeout(() => {
+            animate(p,speed)
+        }, speed);
+    }
+    
+    if(p.direction == 0 && p.crouching === false){
         if(p.current === p.images.idle1){
             clearPlayer(p)
             p.current = p.images.idle2
@@ -285,6 +307,20 @@ function animate(speed,p){
         if(p.current === p.images.idle2){
             clearPlayer(p)
             p.current = p.images.idle1
+            paintPlayer(p)
+            return
+        }
+    }
+    if(p.direction == 0 && p.crouching === true){
+        if(p.current === p.images.crouchIdle1){
+            clearPlayer(p)
+            p.current = p.images.crouchIdle2
+            paintPlayer(p)
+            return
+        }
+        if(p.current === p.images.crouchIdle2){
+            clearPlayer(p)
+            p.current = p.images.crouchIdle1
             paintPlayer(p)
             return
         }
