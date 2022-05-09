@@ -1,6 +1,9 @@
 var backCanvas = document.getElementById("background")
 var player1C = document.getElementById("player1")
 var player2C = document.getElementById("player2")
+var guiC = document.getElementById("gui")
+
+var gui = guiC.getContext("2d");
 var bc = backCanvas.getContext("2d");
 
 
@@ -13,13 +16,18 @@ player1C.width = 1920;
 player1C.height = 1080;
 player2C.width = 1920;
 player2C.height = 1080;
+guiC.width = 1920;
+guiC.height = 1080;
 
-const scale = 8;
+document.width = 1920;
+document.height = 1080;
+
+const scale = 10;
 
 const groundHeight = 700;
 
 var player1 = {
-    x:500,
+    x:0,
     y:groundHeight,
     size:20,
     speed:scale,
@@ -46,11 +54,13 @@ var player1 = {
         crouchWalk3: new Image(),
         crouchWalk4: new Image(),
     },
-    current:undefined
+    current:undefined,
+    maxHealth:50,
+    health:50
 }
 
 var player2 = {
-    x:500,
+    x:1920-20*scale,
     y:groundHeight,
     size:20,
     speed:scale,
@@ -77,7 +87,9 @@ var player2 = {
         crouchWalk3: new Image(),
         crouchWalk4: new Image(),
     },
-    current:undefined
+    current:undefined,
+    maxHealth:50,
+    health:50
 }
 
 console.log(player1.images.walk1)
@@ -497,6 +509,19 @@ function animate(speed,p){
         }
     }
 }
+
+function paintHealth(){
+    gui.fillStyle = "black"
+    gui.fillRect(scale,scale,scale*player1.maxHealth + scale*4,scale*10)
+    gui.fillRect(1920-scale*player2.maxHealth - scale*5 ,scale,scale*player2.maxHealth + scale*4,scale*11)
+
+    gui.fillStyle = "red"
+    gui.fillRect(scale*3,scale*3,scale*player1.health,scale*6)
+    gui.fillRect(1920-scale*player2.maxHealth - scale*3 ,scale*3,scale*player2.health,scale*7)
+
+}
+
+paintHealth()
 
 animate(300,player1)
 animate(300,player2)
