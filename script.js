@@ -47,24 +47,13 @@ var player1 = {
     crouching:false,
     height:2,
     color:"red",
-    images:{
-        idle1: new Image(),
-        idle2: new Image(),
-        walk1: new Image(),
-        walk2: new Image(),
-        walk3: new Image(),
-        walk4: new Image(),
-        jump: new Image(),
-        crouchIdle1: new Image(),
-        crouchIdle2: new Image(),
-        crouchWalk1: new Image(),
-        crouchWalk2: new Image(),
-        crouchWalk3: new Image(),
-        crouchWalk4: new Image(),
+    image: new Image(),
+    current:{
+        x:undefined,
+        y:undefined
     },
-    current:undefined,
-    maxHealth:50,
-    health:50,
+    maxHealth:30,
+    health:30,
     waitTilPunch:0,
     equippedWeapon:weapons.fist
 }
@@ -82,65 +71,26 @@ var player2 = {
     crouching:false,
     height:2,
     color:"blue",
-    images:{
-        idle1: new Image(),
-        idle2: new Image(),
-        walk1: new Image(),
-        walk2: new Image(),
-        walk3: new Image(),
-        walk4: new Image(),
-        jump: new Image(),
-        crouchIdle1: new Image(),
-        crouchIdle2: new Image(),
-        crouchWalk1: new Image(),
-        crouchWalk2: new Image(),
-        crouchWalk3: new Image(),
-        crouchWalk4: new Image(),
+    image: new Image(),
+    current:{
+        x:undefined,
+        y:undefined
     },
-    current:undefined,
-    maxHealth:50,
-    health:50,
+    maxHealth:30,
+    health:30,
     waitTilPunch:0,
     equippedWeapon:weapons.fist
 }
 
+var healthBar = new Image();
 
+healthBar.src = `Images/healthbar.png`
 
-console.log(player1.images.walk1)
-player1.current = player1.images.idle1
-player2.current = player2.images.idle2
-player1.images.idle1.src = `Images/Player1/idle1.png`;
-player1.images.idle2.src = `Images/Player1/idle2.png`;
-player2.images.idle1.src = `Images/Player2/idle1.png`;
-player2.images.idle2.src = `Images/Player2/idle2.png`;
+player1.image.src = `Images/player1.png`;
+player2.image.src = `Images/player2.png`;
 
-player1.images.walk1.src = `Images/Player1/walk1.png`;
-player1.images.walk2.src = `Images/Player1/walk2.png`;
-player2.images.walk1.src = `Images/Player2/walk1.png`;
-player2.images.walk2.src = `Images/Player2/walk2.png`;
-
-player1.images.walk3.src = `Images/Player1/walk3.png`;
-player1.images.walk4.src = `Images/Player1/walk4.png`;
-player2.images.walk3.src = `Images/Player2/walk3.png`;
-player2.images.walk4.src = `Images/Player2/walk4.png`;
-
-player1.images.jump.src = `Images/Player1/jump.png`;
-player2.images.jump.src = `Images/Player2/jump.png`;
-
-player1.images.crouchIdle1.src = `Images/Player1/crouchIdle1.png`;
-player1.images.crouchIdle2.src = `Images/Player1/crouchIdle2.png`;
-player2.images.crouchIdle1.src = `Images/Player2/crouchIdle1.png`;
-player2.images.crouchIdle2.src = `Images/Player2/crouchIdle2.png`;
-
-player1.images.crouchWalk1.src = `Images/Player1/crouchWalk1.png`;
-player1.images.crouchWalk2.src = `Images/Player1/crouchWalk2.png`;
-player2.images.crouchWalk1.src = `Images/Player2/crouchWalk1.png`;
-player2.images.crouchWalk2.src = `Images/Player2/crouchWalk2.png`;
-
-player1.images.crouchWalk3.src = `Images/Player1/crouchWalk3.png`;
-player1.images.crouchWalk4.src = `Images/Player1/crouchWalk4.png`;
-player2.images.crouchWalk3.src = `Images/Player2/crouchWalk3.png`;
-player2.images.crouchWalk4.src = `Images/Player2/crouchWalk4.png`;
+player1.current = {x:0,y:0}
+player2.current = {x:0,y:0}
 
 player1.canvas.imageSmoothingEnabled = false;
 player2.canvas.imageSmoothingEnabled = false;
@@ -151,17 +101,17 @@ window.addEventListener("keydown",function(event){
     if(event.code === "KeyD" && player1.direction !== 1){
         player1.direction = 1;
         if(player1.crouching === false){
-            player1.current = player1.images.walk1;
+            player1.current = {x:2,y:0};
         }else{
-            player1.current = player1.images.crouchWalk1;
+            player1.current = {x:2,y:4};
         }
     }
     if(event.code === "KeyA" && player1.direction !== 2){
         player1.direction = 2;
         if(player1.crouching === false){
-            player1.current = player1.images.walk3;
+            player1.current = {x:4,y:0};
         }else{
-            player1.current = player1.images.crouchWalk3;
+            player1.current = {x:4,y:4};
         }
     }
     if(event.code === "KeyW" && player1.goingUp === false && player1.crouching === false){
@@ -170,24 +120,7 @@ window.addEventListener("keydown",function(event){
     }
     if(event.code === "KeyS" && player1.goingUp === false){
         player1.crouching = true;
-        if(player1.current === player1.images.idle1){
-            player1.current = player1.images.crouchIdle1
-        }
-        if(player1.current === player1.images.idle2){
-            player1.current = player1.images.crouchIdle2
-        }
-        if(player1.current === player1.images.walk1){
-            player1.current = player1.images.crouchWalk1
-        }
-        if(player1.current === player1.images.walk2){
-            player1.current = player1.images.crouchWalk2
-        }
-        if(player1.current === player1.images.walk3){
-            player1.current = player1.images.crouchWalk3
-        }
-        if(player1.current === player1.images.walk4){
-            player1.current = player1.images.crouchWalk4
-        }
+        player1.current.y = 4;
     }
     if(event.code === "Space" && player1.waitTilPunch <= 0){
         punch(1)
@@ -197,17 +130,17 @@ window.addEventListener("keydown",function(event){
     if(event.code === "ArrowRight" && player2.direction !== 1){
         player2.direction = 1;
         if(player2.crouching === false){
-            player2.current = player2.images.walk1;
+            player2.current = {x:2,y:0};
         }else{
-            player2.current = player2.images.crouchWalk1;
+            player2.current = {x:2,y:4};
         }
     }
     if(event.code === "ArrowLeft" && player2.direction !== 2){
         player2.direction = 2;
         if(player2.crouching === false){
-            player2.current = player2.images.walk3;
+            player2.current = {x:4,y:0};
         }else{
-            player2.current = player2.images.crouchWalk3;
+            player2.current = {x:4,y:4};
         }
     }
     if(event.code === "ArrowUp" && player2.goingUp === false && player2.crouching === false){
@@ -216,24 +149,7 @@ window.addEventListener("keydown",function(event){
     }
     if(event.code === "ArrowDown" && player2.goingUp === false){
         player2.crouching = true;
-        if(player2.current === player2.images.idle1){
-            player2.current = player2.images.crouchIdle1
-        }
-        if(player2.current === player2.images.idle2){
-            player2.current = player2.images.crouchIdle2
-        }
-        if(player2.current === player2.images.walk1){
-            player2.current = player2.images.crouchWalk1
-        }
-        if(player2.current === player2.images.walk2){
-            player2.current = player2.images.crouchWalk2
-        }
-        if(player2.current === player2.images.walk3){
-            player2.current = player2.images.crouchWalk3
-        }
-        if(player2.current === player2.images.walk4){
-            player2.current = player2.images.crouchWalk4
-        }
+        player2.current.y = 4;
     }
     if(event.code === "ShiftRight" && player2.waitTilPunch <= 0){
         punch(2)
@@ -243,84 +159,64 @@ window.addEventListener("keydown",function(event){
 
 window.addEventListener("keyup",function(event){
     if(event.code === "KeyD" && player1.direction === 1){
+        clearPlayer(player1);
+
         player1.direction = 0;
         if(player1.crouching === false){
-            player1.current = player1.images.idle1;
+            player1.current = {x:0,y:0};
         }else{
-            player1.current = player1.images.crouchIdle1;
+            player1.current = {x:0,y:4};
         }
+        paintPlayer(player1)
+
     }
     if(event.code === "KeyA" && player1.direction === 2){
+        clearPlayer(player1);
+
         player1.direction = 0;
         if(player1.crouching === false){
-            player1.current = player1.images.idle1;
+            player1.current = {x:0,y:0};
         }else{
-            player1.current = player1.images.crouchIdle1;
+            player1.current = {x:0,y:4};
         }
+        paintPlayer(player1)
     }
     if(event.code === "KeyS"){
         clearPlayer(player1);
         player1.crouching = false;
         player1.height = 2;
-        if(player1.current === player1.images.crouchIdle1){
-            player1.current = player1.images.idle1
-        }
-        if(player1.current === player1.images.crouchIdle2){
-            player1.current = player1.images.idle2
-        }
-        if(player1.current === player1.images.crouchWalk1){
-            player1.current = player1.images.walk1
-        }
-        if(player1.current === player1.images.crouchWalk2){
-            player1.current = player1.images.walk2
-        }
-        if(player1.current === player1.images.crouchWalk3){
-            player1.current = player1.images.walk3
-        }
-        if(player1.current === player1.images.crouchWalk4){
-            player1.current = player1.images.walk3
-        }
+        player1.current.y = 0;
+
         paintPlayer(player1);
     }
 
     if(event.code === "ArrowRight" && player2.direction === 1){
+        clearPlayer(player2);
+
         player2.direction = 0;
         if(player2.crouching === false){
-            player2.current = player2.images.idle1;
+            player2.current = {x:0,y:0};
         }else{
-            player2.current = player2.images.crouchIdle1;
+            player2.current = {x:0,y:4};
         }
+        paintPlayer(player2)
     }
     if(event.code === "ArrowLeft" && player2.direction === 2){
+        clearPlayer(player2);
+
         player2.direction = 0;
         if(player2.crouching === false){
-            player2.current = player2.images.idle1;
+            player2.current = {x:0,y:0};
         }else{
-            player2.current = player2.images.crouchIdle1;
-        }        
+            player2.current = {x:0,y:4};
+        }
+        paintPlayer(player2)
     }
     if(event.code === "ArrowDown"){
         clearPlayer(player2);
         player2.crouching = false;
         player2.height = 2;
-        if(player2.current === player2.images.crouchIdle1){
-            player2.current = player2.images.idle1
-        }
-        if(player2.current === player2.images.crouchIdle2){
-            player2.current = player2.images.idle2
-        }
-        if(player2.current === player2.images.crouchWalk1){
-            player2.current = player2.images.walk1
-        }
-        if(player2.current === player2.images.crouchWalk2){
-            player2.current = player2.images.walk2
-        }
-        if(player2.current === player2.images.crouchWalk3){
-            player2.current = player2.images.walk3
-        }
-        if(player2.current === player2.images.crouchWalk4){
-            player2.current = player2.images.walk3
-        }
+        player2.current.y = 0;
         paintPlayer(player2);
     }
     
@@ -360,6 +256,7 @@ function update(){
     player2.waitTilPunch -= player1.equippedWeapon.speed;
 
     paintHealth();
+
 }
 
 update();
@@ -389,13 +286,13 @@ function moveLeft(p){
 function moveUp(p){
     clearPlayer(p)
     if(p.direction === 0){
-        p.current = p.images.jump;
+        p.current = {x:0,y:2};
     }
     if(p.direction === 1){
-        p.current = p.images.walk2;
+        p.current = {x:3,y:0};
     }
     if(p.direction === 2){
-        p.current = p.images.walk3;
+        p.current = {x:4,y:0};
     }
     p.y -= p.momentumY;
     p.momentumY -= p.gravity;
@@ -404,13 +301,13 @@ function moveUp(p){
         
         clearPlayer(p)
         if(p.direction === 0){
-            p.current = p.images.idle1;
+            p.current = {x:0,y:0};
         }
         if(p.direction === 1){
-            p.current = p.images.walk1;
+            p.current = {x:2,y:0};
         }
         if(p.direction === 2){
-            p.current = p.images.walk4;
+            p.current = {x:5,y:0};
         }
         p.y = groundHeight;
         paintPlayer(p)
@@ -446,110 +343,122 @@ function punch(p){
 function paintPlayer(p){
     //p.canvas.fillStyle = p.color;
     //p.canvas.fillRect(p.x,p.y + (p.size*scale) - (p.size*scale)*p.height,(p.size*scale),(p.size*scale)*p.height)
-    if (p.current.complete) {
-        p.canvas.drawImage(p.current, Math.floor(p.x),Math.floor(p.y + (p.size*scale) - (p.size*scale)*p.height),Math.floor((p.size*scale)),Math.floor((p.size*scale)*p.height));
+    if (p.image.complete) {
+        
+        p.canvas.drawImage(p.image, p.current.x*p.size, p.current.y*p.size, p.size,p.size*p.height,Math.floor(p.x),Math.floor(p.y + (p.size*scale) - (p.size*scale)*p.height),Math.floor((p.size*scale)),Math.floor((p.size*scale)*p.height));
     }
 }
 function clearPlayer(p){
+
     p.canvas.clearRect(p.x,p.y + (p.size*scale) - (p.size*scale)*p.height-(10/scale),(p.size*scale),(p.size*scale)*p.height+(20/scale))
 }
 
 function animate(speed,p){
-    
+
+
     if(p.direction === 0){
         setTimeout(() => {
-            animate(p,speed)
+            animate(speed,p)
         }, speed+ Math.random()*speed);
     }else{
         setTimeout(() => {
-            animate(p,speed)
+            animate(speed,p)
         }, speed);
     }
-    
+
     if(p.direction == 0 && p.crouching === false){
-        if(p.current === p.images.idle1 || p.current === p.images.crouchIdle1){
+
+        if(p.current.x === 0 && p.current.y === 0 || p.current.x === 0 && p.current.y === 4){
+
             clearPlayer(p)
-            p.current = p.images.idle2
+
+            p.current = {x:1,y:0}
             paintPlayer(p)
             return
         }
-        if(p.current === p.images.idle2 || p.current === p.images.crouchIdle2){
+        if(p.current.x === 1 && p.current.y === 0 || p.current.x === 1 && p.current.y === 4){
             clearPlayer(p)
-            p.current = p.images.idle1
+            p.current = {x:0,y:0}
             paintPlayer(p)
             return
         }
     }
+    
     if(p.direction == 0 && p.crouching === true){
-        if(p.current === p.images.crouchIdle1 || p.current === p.images.idle1){
+        if(p.current.x === 0 && p.current.y === 4 || p.current.x === 0 && p.current.y === 0){
             clearPlayer(p)
-            p.current = p.images.crouchIdle2
+            p.current = {x:1,y:4}
             paintPlayer(p)
             return
         }
-        if(p.current === p.images.crouchIdle2 || p.current === p.images.idle2){
+        if(p.current.x === 1 && p.current.y === 4 || p.current.x === 1 && p.current.y === 0){
             clearPlayer(p)
-            p.current = p.images.crouchIdle1
+            p.current = {x:0,y:4}
             paintPlayer(p)
             return
         }
     }
+    
     if(p.direction == 1 && p.crouching === false){
-        if(p.current === p.images.walk1 || p.current === p.images.crouchWalk1){
+        if(p.current.x === 2 && p.current.y === 0 || p.current.x === 2 && p.current.y === 4){
             clearPlayer(p)
-            p.current = p.images.walk2
+            p.current = {x:3,y:0}
             paintPlayer(p)
             return
         }
-        if(p.current === p.images.walk2 || p.current === p.images.crouchWalk2){
+        if(p.current.x === 3 && p.current.y === 0 || p.current.x === 3 && p.current.y === 4){
             clearPlayer(p)
-            p.current = p.images.walk1
+            p.current = {x:2,y:0}
             paintPlayer(p)
             return
         }
     }
+    
     if(p.direction == 1 && p.crouching === true){
-        if(p.current === p.images.crouchWalk1 || p.current === p.images.walk1){
+        if(p.current.x === 2 && p.current.y === 4 || p.current.x === 2 && p.current.y === 0){
             clearPlayer(p)
-            p.current = p.images.crouchWalk2
+            p.current = {x:3,y:4}
             paintPlayer(p)
             return
         }
-        if(p.current === p.images.crouchWalk2 || p.current === p.images.walk2){
+        if(p.current.x === 3 && p.current.y === 4 || p.current.x === 3 && p.current.y === 0){
             clearPlayer(p)
-            p.current = p.images.crouchWalk1
+            p.current = {x:2,y:4}
             paintPlayer(p)
             return
         }
     }
+    
     if(p.direction == 2 && p.crouching === false){
-        if(p.current === p.images.walk3 || p.current === p.images.crouchWalk3){
+        if(p.current.x === 4 && p.current.y === 0 || p.current.x === 4 && p.current.y === 4){
             clearPlayer(p)
-            p.current = p.images.walk4
+            p.current = {x:5,y:0}
             paintPlayer(p)
             return
         }
-        if(p.current === p.images.walk4 || p.current === p.images.crouchWalk4){
+        if(p.current.x === 5 && p.current.y === 0 || p.current.x === 5 && p.current.y === 4){
             clearPlayer(p)
-            p.current = p.images.walk3
+            p.current = {x:4,y:0}
             paintPlayer(p)
             return
         }
     }
+    
     if(p.direction == 2 && p.crouching === true){
-        if(p.current === p.images.crouchWalk3 || p.current === p.images.walk3){
+        if(p.current.x === 4 && p.current.y === 4 || p.current.x === 4 && p.current.y === 0){
             clearPlayer(p)
-            p.current = p.images.crouchWalk4
+            p.current = {x:5,y:4}
             paintPlayer(p)
             return
         }
-        if(p.current === p.images.crouchWalk4 || p.current === p.images.walk4){
+        if(p.current.x === 5 && p.current.y === 4 || p.current.x === 5 && p.current.y === 0){
             clearPlayer(p)
-            p.current = p.images.crouchWalk3
+            p.current = {x:4,y:4}
             paintPlayer(p)
             return
         }
     }
+    
 }
 
 function paintHealth(){
@@ -566,24 +475,16 @@ function paintHealth(){
         player2.waitTilPunch = 0;
     }
 
-    gui.fillStyle = "black"
-    gui.fillRect(scale,scale,scale*player1.maxHealth + scale*4,scale*10)
-    gui.fillRect(1920-scale*player2.maxHealth - scale*5 ,scale,scale*player2.maxHealth + scale*4,scale*11)
-    gui.fillStyle = "gray";
-    gui.fillRect(scale,scale,(scale*player1.maxHealth + scale*4)*(player1.waitTilPunch/100),scale*10)
-    gui.fillRect(1920-scale*player2.maxHealth - scale*5 ,scale,(scale*player2.maxHealth + scale*4)*(player2.waitTilPunch/100),scale*11)
-
-    gui.fillStyle = "red"
-    gui.fillRect(scale*3,scale*3,scale*player1.health,scale*6)
-    gui.fillRect(1920-scale*player2.maxHealth - scale*3 ,scale*3,scale*player2.health,scale*7)
-    
+    if (healthBar.complete) {
+        //gui.drawImage(healthBar,scale,scale,41*scale,8*scale,0,(player1.maxHealth-player1.health)*8,41,8);
+        //gui.drawImage(healthBar,1920-42*scale,scale,41*scale,8*scale,(player2.maxHealth-player2.health)*8,41,8);
+    }    
 }
 
 function isIntersect(Ax, Ay, Aw, Ah, Bx, By, Bw, Bh){
     return Bx + Bw > Ax && By + Bh > Ay && Ax + Aw > Bx & Ay + Ah > By;
 }
 
-
-
 animate(300,player1)
 animate(300,player2)
+
