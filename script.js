@@ -15,7 +15,13 @@ var sounds = {
 
 png_font.setup(document.getElementById("gui").getContext("2d"));
 
+let backImg = new Image();
 
+backImg.src = `Images/back.png`
+
+bc.imageSmoothingEnabled = false;
+
+bc.drawImage(backImg,0,0,1920,1080)
 
 backCanvas.width = 1920;
 backCanvas.height = 1080;
