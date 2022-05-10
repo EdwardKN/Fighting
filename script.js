@@ -77,6 +77,7 @@ var player1 = {
     regenCooldownSpeed:0.5,
     regenSpeedDefault:0.06,
     regenSpeed:0.06,
+    dead:false
 }
 
 var player2 = {
@@ -106,6 +107,7 @@ var player2 = {
     regenCooldownSpeed:0.5,
     regenSpeedDefault:0.06,
     regenSpeed:0.06,
+    dead:false
 }
 
 var menu = {
@@ -129,132 +131,138 @@ healthCanvas.imageSmoothingEnabled = false;
 
 window.addEventListener("keydown",function(event){
     console.log(event)
-    if(event.code === "KeyD" && player1.direction !== 1){
-        player1.direction = 1;
-        if(player1.crouching === false){
-            player1.current = {x:2,y:0};
-        }else{
-            player1.current = {x:2,y:4};
+    if(player1.dead === false){
+        if(event.code === "KeyD" && player1.direction !== 1){
+            player1.direction = 1;
+            if(player1.crouching === false){
+                player1.current = {x:2,y:0};
+            }else{
+                player1.current = {x:2,y:4};
+            }
+        }
+        if(event.code === "KeyA" && player1.direction !== 2){
+            player1.direction = 2;
+            if(player1.crouching === false){
+                player1.current = {x:4,y:0};
+            }else{
+                player1.current = {x:4,y:4};
+            }
+        }
+        if(event.code === "KeyW" && player1.goingUp === false && player1.crouching === false){
+            player1.momentumY = scale*2;
+            player1.goingUp = true;
+        }
+        if(event.code === "KeyS" && player1.goingUp === false){
+            player1.crouching = true;
+            player1.current.y = 4;
+        }
+        if(event.code === "Space" && player1.waitTilPunch <= 0){
+            if(menu.menuState === 0){
+                punch(1)
+                player1.waitTilPunch = 100;
+            }
         }
     }
-    if(event.code === "KeyA" && player1.direction !== 2){
-        player1.direction = 2;
-        if(player1.crouching === false){
-            player1.current = {x:4,y:0};
-        }else{
-            player1.current = {x:4,y:4};
+    if(player2.dead === false){
+        if(event.code === "ArrowRight" && player2.direction !== 1){
+            player2.direction = 1;
+            if(player2.crouching === false){
+                player2.current = {x:2,y:0};
+            }else{
+                player2.current = {x:2,y:4};
+            }
         }
-    }
-    if(event.code === "KeyW" && player1.goingUp === false && player1.crouching === false){
-        player1.momentumY = scale*2;
-        player1.goingUp = true;
-    }
-    if(event.code === "KeyS" && player1.goingUp === false){
-        player1.crouching = true;
-        player1.current.y = 4;
-    }
-    if(event.code === "Space" && player1.waitTilPunch <= 0){
-        if(menu.menuState === 0){
-            punch(1)
-            player1.waitTilPunch = 100;
+        if(event.code === "ArrowLeft" && player2.direction !== 2){
+            player2.direction = 2;
+            if(player2.crouching === false){
+                player2.current = {x:4,y:0};
+            }else{
+                player2.current = {x:4,y:4};
+            }
         }
-    }
-    
-    if(event.code === "ArrowRight" && player2.direction !== 1){
-        player2.direction = 1;
-        if(player2.crouching === false){
-            player2.current = {x:2,y:0};
-        }else{
-            player2.current = {x:2,y:4};
+        if(event.code === "ArrowUp" && player2.goingUp === false && player2.crouching === false){
+            player2.momentumY = scale*2;
+            player2.goingUp = true;
         }
-    }
-    if(event.code === "ArrowLeft" && player2.direction !== 2){
-        player2.direction = 2;
-        if(player2.crouching === false){
-            player2.current = {x:4,y:0};
-        }else{
-            player2.current = {x:4,y:4};
+        if(event.code === "ArrowDown" && player2.goingUp === false){
+            player2.crouching = true;
+            player2.current.y = 4;
         }
-    }
-    if(event.code === "ArrowUp" && player2.goingUp === false && player2.crouching === false){
-        player2.momentumY = scale*2;
-        player2.goingUp = true;
-    }
-    if(event.code === "ArrowDown" && player2.goingUp === false){
-        player2.crouching = true;
-        player2.current.y = 4;
-    }
-    if(event.code === "ShiftRight" && player2.waitTilPunch <= 0){
-        if(menu.menuState === 0){
-            punch(2)
-            player2.waitTilPunch = 100;
+        if(event.code === "ShiftRight" && player2.waitTilPunch <= 0){
+            if(menu.menuState === 0){
+                punch(2)
+                player2.waitTilPunch = 100;
+            }
         }
     }
 })
 
 window.addEventListener("keyup",function(event){
-    if(event.code === "KeyD" && player1.direction === 1){
-        clearPlayer(player1);
+    if(player1.dead === false){
+        if(event.code === "KeyD" && player1.direction === 1){
+            clearPlayer(player1);
 
-        player1.direction = 0;
-        if(player1.crouching === false){
-            player1.current = {x:0,y:0};
-        }else{
-            player1.current = {x:0,y:4};
+            player1.direction = 0;
+            if(player1.crouching === false){
+                player1.current = {x:0,y:0};
+            }else{
+                player1.current = {x:0,y:4};
+            }
+            paintPlayer(player1)
+
         }
-        paintPlayer(player1)
+        if(event.code === "KeyA" && player1.direction === 2){
+            clearPlayer(player1);
 
-    }
-    if(event.code === "KeyA" && player1.direction === 2){
-        clearPlayer(player1);
-
-        player1.direction = 0;
-        if(player1.crouching === false){
-            player1.current = {x:0,y:0};
-        }else{
-            player1.current = {x:0,y:4};
+            player1.direction = 0;
+            if(player1.crouching === false){
+                player1.current = {x:0,y:0};
+            }else{
+                player1.current = {x:0,y:4};
+            }
+            paintPlayer(player1)
         }
-        paintPlayer(player1)
-    }
-    if(event.code === "KeyS"){
-        clearPlayer(player1);
-        player1.crouching = false;
-        player1.height = 2;
-        player1.current.y = 0;
+        if(event.code === "KeyS"){
+            clearPlayer(player1);
+            player1.crouching = false;
+            player1.height = 2;
+            player1.current.y = 0;
 
-        paintPlayer(player1);
-    }
-
-    if(event.code === "ArrowRight" && player2.direction === 1){
-        clearPlayer(player2);
-
-        player2.direction = 0;
-        if(player2.crouching === false){
-            player2.current = {x:0,y:0};
-        }else{
-            player2.current = {x:0,y:4};
+            paintPlayer(player1);
         }
-        paintPlayer(player2)
     }
-    if(event.code === "ArrowLeft" && player2.direction === 2){
-        clearPlayer(player2);
 
-        player2.direction = 0;
-        if(player2.crouching === false){
-            player2.current = {x:0,y:0};
-        }else{
-            player2.current = {x:0,y:4};
+    if(player2.dead === false){
+        if(event.code === "ArrowRight" && player2.direction === 1){
+            clearPlayer(player2);
+
+            player2.direction = 0;
+            if(player2.crouching === false){
+                player2.current = {x:0,y:0};
+            }else{
+                player2.current = {x:0,y:4};
+            }
+            paintPlayer(player2)
         }
-        paintPlayer(player2)
+        if(event.code === "ArrowLeft" && player2.direction === 2){
+            clearPlayer(player2);
+
+            player2.direction = 0;
+            if(player2.crouching === false){
+                player2.current = {x:0,y:0};
+            }else{
+                player2.current = {x:0,y:4};
+            }
+            paintPlayer(player2)
+        }
+        if(event.code === "ArrowDown"){
+            clearPlayer(player2);
+            player2.crouching = false;
+            player2.height = 2;
+            player2.current.y = 0;
+            paintPlayer(player2);
+        }
     }
-    if(event.code === "ArrowDown"){
-        clearPlayer(player2);
-        player2.crouching = false;
-        player2.height = 2;
-        player2.current.y = 0;
-        paintPlayer(player2);
-    }
-    
 })
 
 function update(){
@@ -398,8 +406,8 @@ function punch(p){
 }
 
 function paintPlayer(p){
-    //p.canvas.fillStyle = p.color;
-    //p.canvas.fillRect(p.x,p.y + (p.size*scale) - (p.size*scale)*p.height,(p.size*scale),(p.size*scale)*p.height)
+    p.canvas.fillStyle = p.color;
+    p.canvas.fillRect(p.x,p.y + (p.size*scale) - (p.size*scale)*p.height,(p.size*scale),(p.size*scale)*p.height)
     if (p.image.complete) {
         
         p.canvas.drawImage(p.image, p.current.x*p.size, p.current.y*p.size, p.size,p.size*p.height,Math.floor(p.x),Math.floor(p.y + (p.size*scale) - (p.size*scale)*p.height),Math.floor((p.size*scale)),Math.floor((p.size*scale)*p.height));
@@ -567,12 +575,20 @@ function paintHealth(){
         player2.health -= 0.4;
     }
     if(player1.healthGoingTo <= 0){
+        clearPlayer(player1)
         menu.menuState = 1;
+        player1.current = {x:1,y:2}
         updateMenu();
+        player1.dead = true;
+        paintPlayer(player1)
     }
     if(player2.healthGoingTo <= 0){
+        clearPlayer(player2)
         menu.menuState = 2;
+        player2.current = {x:1,y:2}
         updateMenu();
+        player2.dead = true;
+        paintPlayer(player2)
     }
 
     if (healthBar.complete) {
