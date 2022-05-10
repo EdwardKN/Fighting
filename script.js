@@ -54,6 +54,7 @@ var player1 = {
     },
     maxHealth:30,
     health:30,
+    healthGoingTo:30,
     waitTilPunch:0,
     equippedWeapon:weapons.fist
 }
@@ -78,6 +79,7 @@ var player2 = {
     },
     maxHealth:30,
     health:30,
+    healthGoingTo:30,
     waitTilPunch:0,
     equippedWeapon:weapons.fist
 }
@@ -256,6 +258,12 @@ function update(){
     player1.waitTilPunch -= player1.equippedWeapon.speed;
     player2.waitTilPunch -= player1.equippedWeapon.speed;
 
+    if(player1.health > player1.healthGoingTo){
+        player1.health -= 0.4;
+    }
+    if(player2.health > player2.healthGoingTo){
+        player2.health -= 0.4;
+    }
     paintHealth();
 
 }
@@ -331,12 +339,12 @@ function punch(p){
     
     if(p === 1){
         if(isIntersect(player1.x-(player1.equippedWeapon.range*scale),player1.y-(player1.equippedWeapon.range*scale),player1.size*scale+(player1.equippedWeapon.range*scale*2),player1.size*scale+(player1.equippedWeapon.range*scale*2),player2.x,player2.y,player2.size*scale,player2.size*scale) === 1){
-            player2.health -= player1.equippedWeapon.damage;
+            player2.healthGoingTo -= player1.equippedWeapon.damage;
         }
     }
     if(p === 2){
         if(isIntersect(player2.x-(player2.equippedWeapon.range*scale),player2.y-(player2.equippedWeapon.range*scale),player2.size*scale+(player2.equippedWeapon.range*scale*2),player2.size*scale+(player2.equippedWeapon.range*scale*2),player1.x,player1.y,player1.size*scale,player1.size*scale) === 1){
-            player1.health -= player2.equippedWeapon.damage;
+            player1.healthGoingTo -= player2.equippedWeapon.damage;
         }
     }
 }
@@ -478,17 +486,17 @@ function paintHealth(){
 
     if (healthBar.complete) {
         gui.clearRect(scale,scale,41*scale,8*scale)
-        if(player1.health !== player1.maxHealth){
-            gui.drawImage(healthBar,0,(player1.maxHealth-player1.health)*8-1,41,8,scale,scale,41*scale,8*scale);
+        if(player1.health < player1.maxHealth-2){
+            gui.drawImage(healthBar,0,Math.floor(player1.maxHealth-player1.health)*8-1,41,8,scale,scale,41*scale,8*scale);
         }else{
-            gui.drawImage(healthBar,0,(player1.maxHealth-player1.health)*8,41,8,scale,scale,41*scale,8*scale);
+            gui.drawImage(healthBar,0,Math.floor(player1.maxHealth-player1.health)*8,41,8,scale,scale,41*scale,8*scale);
         }
 
         gui.clearRect(1920-42*scale,scale,41*scale,8*scale)
-        if(player2.health !== player2.maxHealth){
-            gui.drawImage(healthBar,0,(player2.maxHealth-player2.health)*8-1,41,8,1920-42*scale,scale,41*scale,8*scale);
+        if(player2.health < player2.maxHealth-2){
+            gui.drawImage(healthBar,0,Math.floor(player2.maxHealth-player2.health)*8-1,41,8,1920-42*scale,scale,41*scale,8*scale);
         }else{
-            gui.drawImage(healthBar,0,(player2.maxHealth-player2.health)*8,41,8,1920-42*scale,scale,41*scale,8*scale);
+            gui.drawImage(healthBar,0,Math.floor(player2.maxHealth-player2.health)*8,41,8,1920-42*scale,scale,41*scale,8*scale);
         }
     }    
 }
