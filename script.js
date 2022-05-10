@@ -9,6 +9,9 @@ var bc = backCanvas.getContext("2d");
 
 var gui = healthCanvasC.getContext("2d");
 
+var sounds = {
+    punch : new Audio('Sounds/sounds/punch.mp3')
+};
 
 png_font.setup(document.getElementById("gui").getContext("2d"));
 
@@ -31,6 +34,8 @@ document.height = 1080;
 const scale = 10;
 
 const groundHeight = 1080-20*scale-scale*10;
+
+
 
 var weapons = {
     fist:{
@@ -375,6 +380,7 @@ function punch(p){
     if(p === 1){
         if(isIntersect(player1.x-(player1.equippedWeapon.range*scale),player1.y-(player1.equippedWeapon.range*scale),player1.size*scale+(player1.equippedWeapon.range*scale*2),player1.size*scale+(player1.equippedWeapon.range*scale*2),player2.x,player2.y,player2.size*scale,player2.size*scale) === 1){
             player2.healthGoingTo -= player1.equippedWeapon.damage;
+            sounds.punch.play();
             player2.regenCooldown = 100;
             player2.regenSpeed = player2.regenSpeedDefault;
         }
@@ -382,6 +388,7 @@ function punch(p){
     if(p === 2){
         if(isIntersect(player2.x-(player2.equippedWeapon.range*scale),player2.y-(player2.equippedWeapon.range*scale),player2.size*scale+(player2.equippedWeapon.range*scale*2),player2.size*scale+(player2.equippedWeapon.range*scale*2),player1.x,player1.y,player1.size*scale,player1.size*scale) === 1){
             player1.healthGoingTo -= player2.equippedWeapon.damage;
+            sounds.punch.play();
             player1.regenCooldown = 100;
             player1.regenSpeed = player1.regenSpeedDefault;
         }
