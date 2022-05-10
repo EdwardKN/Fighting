@@ -414,8 +414,8 @@ function punch(p){
 }
 
 function paintPlayer(p){
-    p.canvas.fillStyle = p.color;
-    p.canvas.fillRect(p.x,p.y + (p.size*scale) - (p.size*scale)*p.height,(p.size*scale),(p.size*scale)*p.height)
+    //p.canvas.fillStyle = p.color;
+    //p.canvas.fillRect(p.x,p.y + (p.size*scale) - (p.size*scale)*p.height,(p.size*scale),(p.size*scale)*p.height)
     if (p.image.complete) {
         
         p.canvas.drawImage(p.image, p.current.x*p.size, p.current.y*p.size, p.size,p.size*p.height,Math.floor(p.x),Math.floor(p.y + (p.size*scale) - (p.size*scale)*p.height),Math.floor((p.size*scale)),Math.floor((p.size*scale)*p.height));
