@@ -1,3 +1,3 @@
 # Fighting
 
-New Game
+slåss är coolt
