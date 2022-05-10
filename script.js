@@ -94,6 +94,7 @@ player2.current = {x:0,y:0}
 
 player1.canvas.imageSmoothingEnabled = false;
 player2.canvas.imageSmoothingEnabled = false;
+gui.imageSmoothingEnabled = false;
 
 
 window.addEventListener("keydown",function(event){
@@ -476,8 +477,19 @@ function paintHealth(){
     }
 
     if (healthBar.complete) {
-        //gui.drawImage(healthBar,scale,scale,41*scale,8*scale,0,(player1.maxHealth-player1.health)*8,41,8);
-        //gui.drawImage(healthBar,1920-42*scale,scale,41*scale,8*scale,(player2.maxHealth-player2.health)*8,41,8);
+        gui.clearRect(scale,scale,41*scale,8*scale)
+        if(player1.health !== player1.maxHealth){
+            gui.drawImage(healthBar,0,(player1.maxHealth-player1.health)*8-1,41,8,scale,scale,41*scale,8*scale);
+        }else{
+            gui.drawImage(healthBar,0,(player1.maxHealth-player1.health)*8,41,8,scale,scale,41*scale,8*scale);
+        }
+
+        gui.clearRect(1920-42*scale,scale,41*scale,8*scale)
+        if(player2.health !== player2.maxHealth){
+            gui.drawImage(healthBar,0,(player2.maxHealth-player2.health)*8-1,41,8,1920-42*scale,scale,41*scale,8*scale);
+        }else{
+            gui.drawImage(healthBar,0,(player2.maxHealth-player2.health)*8,41,8,1920-42*scale,scale,41*scale,8*scale);
+        }
     }    
 }
 
