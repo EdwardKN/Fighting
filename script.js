@@ -24,7 +24,15 @@ document.height = 1080;
 
 const scale = 10;
 
-const groundHeight = 700;
+const groundHeight = 1080-20*scale;
+
+var weapons = {
+    fist:{
+        damage:5,
+        range:3,
+        speed:1
+    }
+}
 
 var player1 = {
     x:0,
@@ -56,7 +64,9 @@ var player1 = {
     },
     current:undefined,
     maxHealth:50,
-    health:50
+    health:50,
+    waitTilPunch:0,
+    equippedWeapon:weapons.fist
 }
 
 var player2 = {
@@ -89,8 +99,12 @@ var player2 = {
     },
     current:undefined,
     maxHealth:50,
-    health:50
+    health:50,
+    waitTilPunch:0,
+    equippedWeapon:weapons.fist
 }
+
+
 
 console.log(player1.images.walk1)
 player1.current = player1.images.idle1
@@ -175,6 +189,10 @@ window.addEventListener("keydown",function(event){
             player1.current = player1.images.crouchWalk4
         }
     }
+    if(event.code === "Space" && player1.waitTilPunch <= 0){
+        punch(1)
+        player1.waitTilPunch = 100;
+    }
     
     if(event.code === "ArrowRight" && player2.direction !== 1){
         player2.direction = 1;
@@ -216,6 +234,10 @@ window.addEventListener("keydown",function(event){
         if(player2.current === player2.images.walk4){
             player2.current = player2.images.crouchWalk4
         }
+    }
+    if(event.code === "ShiftRight" && player2.waitTilPunch <= 0){
+        punch(2)
+        player2.waitTilPunch = 100;
     }
 })
 
@@ -307,6 +329,7 @@ window.addEventListener("keyup",function(event){
 function update(){
     requestAnimationFrame(update)
 
+
     if(player1.direction === 1){
         moveRight(player1)
     }
@@ -332,6 +355,11 @@ function update(){
     if(player2.crouching === true){
         crouch(player2);
     }
+
+    player1.waitTilPunch -= player1.equippedWeapon.speed;
+    player2.waitTilPunch -= player1.equippedWeapon.speed;
+
+    paintHealth();
 }
 
 update();
@@ -398,6 +426,20 @@ function crouch(p){
         clearPlayer(p)
         p.y = groundHeight + p.height*(p.size*scale);
         paintPlayer(p)
+    }
+}
+
+function punch(p){
+    
+    if(p === 1){
+        if(isIntersect(player1.x-(player1.equippedWeapon.range*scale),player1.y-(player1.equippedWeapon.range*scale),player1.size*scale+(player1.equippedWeapon.range*scale*2),player1.size*scale+(player1.equippedWeapon.range*scale*2),player2.x,player2.y,player2.size*scale,player2.size*scale) === 1){
+            player2.health -= player1.equippedWeapon.damage;
+        }
+    }
+    if(p === 2){
+        if(isIntersect(player2.x-(player2.equippedWeapon.range*scale),player2.y-(player2.equippedWeapon.range*scale),player2.size*scale+(player2.equippedWeapon.range*scale*2),player2.size*scale+(player2.equippedWeapon.range*scale*2),player1.x,player1.y,player1.size*scale,player1.size*scale) === 1){
+            player1.health -= player2.equippedWeapon.damage;
+        }
     }
 }
 
@@ -511,17 +553,37 @@ function animate(speed,p){
 }
 
 function paintHealth(){
+    if(player1.health < 0){
+        player1.health = 0;
+    }
+    if(player2.health < 0){
+        player2.health = 0;
+    }
+    if(player1.waitTilPunch <= 0){
+        player1.waitTilPunch = 0;
+    }
+    if(player2.waitTilPunch <= 0){
+        player2.waitTilPunch = 0;
+    }
+
     gui.fillStyle = "black"
     gui.fillRect(scale,scale,scale*player1.maxHealth + scale*4,scale*10)
     gui.fillRect(1920-scale*player2.maxHealth - scale*5 ,scale,scale*player2.maxHealth + scale*4,scale*11)
+    gui.fillStyle = "gray";
+    gui.fillRect(scale,scale,(scale*player1.maxHealth + scale*4)*(player1.waitTilPunch/100),scale*10)
+    gui.fillRect(1920-scale*player2.maxHealth - scale*5 ,scale,(scale*player2.maxHealth + scale*4)*(player2.waitTilPunch/100),scale*11)
 
     gui.fillStyle = "red"
     gui.fillRect(scale*3,scale*3,scale*player1.health,scale*6)
     gui.fillRect(1920-scale*player2.maxHealth - scale*3 ,scale*3,scale*player2.health,scale*7)
-
+    
 }
 
-paintHealth()
+function isIntersect(Ax, Ay, Aw, Ah, Bx, By, Bw, Bh){
+    return Bx + Bw > Ax && By + Bh > Ay && Ax + Aw > Bx & Ay + Ah > By;
+}
+
+
 
 animate(300,player1)
 animate(300,player2)
