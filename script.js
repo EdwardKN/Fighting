@@ -78,7 +78,7 @@ var player1 = {
     waitTilPunch:0,
     equippedWeapon:weapons.test,
     regenCooldown:0,
-    regenCooldownSpeed:0.5,
+    regenCooldownSpeed:1,
     regenSpeedDefault:0.06,
     regenSpeed:0.06,
     dead:false
@@ -108,7 +108,7 @@ var player2 = {
     waitTilPunch:0,
     equippedWeapon:weapons.test,
     regenCooldown:0,
-    regenCooldownSpeed:0.5,
+    regenCooldownSpeed:1,
     regenSpeedDefault:0.06,
     regenSpeed:0.06,
     dead:false
