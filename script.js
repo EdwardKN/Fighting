@@ -46,7 +46,7 @@ var weapons = {
     test:{
         damage:5,
         range:3,
-        speed:10
+        speed:5
     }
 }
 
@@ -380,7 +380,8 @@ function punch(p){
     if(p === 1){
         if(isIntersect(player1.x-(player1.equippedWeapon.range*scale),player1.y-(player1.equippedWeapon.range*scale),player1.size*scale+(player1.equippedWeapon.range*scale*2),player1.size*scale+(player1.equippedWeapon.range*scale*2),player2.x,player2.y,player2.size*scale,player2.size*scale) === 1){
             player2.healthGoingTo -= player1.equippedWeapon.damage;
-            sounds.punch.play();
+            let effect = sounds.punch.cloneNode()
+            effect.play();
             player2.regenCooldown = 100;
             player2.regenSpeed = player2.regenSpeedDefault;
         }
@@ -388,7 +389,8 @@ function punch(p){
     if(p === 2){
         if(isIntersect(player2.x-(player2.equippedWeapon.range*scale),player2.y-(player2.equippedWeapon.range*scale),player2.size*scale+(player2.equippedWeapon.range*scale*2),player2.size*scale+(player2.equippedWeapon.range*scale*2),player1.x,player1.y,player1.size*scale,player1.size*scale) === 1){
             player1.healthGoingTo -= player2.equippedWeapon.damage;
-            sounds.punch.play();
+            let effect = sounds.punch.cloneNode()
+            effect.play();
             player1.regenCooldown = 100;
             player1.regenSpeed = player1.regenSpeedDefault;
         }
@@ -532,12 +534,20 @@ function paintHealth(){
     player1.regenCooldown -= player1.regenCooldownSpeed;
     player2.regenCooldown -= player1.regenCooldownSpeed;
 
-    if(player1.regenCooldown < 0 && player2.health < 30){
+    if(player1.health > 30){
+        player1.health = 30
+        player1.regenSpeed =0
+    }
+    if(player2.health > 30){
+        player2.health = 30
+        player2.regenSpeed =0
+    }
+    if(player1.regenCooldown < 0){
         player1.regenSpeed *= 1.001;
         player1.healthGoingTo += player1.regenSpeed*(player1.health/30)
         player1.health += player1.regenSpeed*(player1.health/30)
     }
-    if(player2.regenCooldown < 0 && player2.health < 30){
+    if(player2.regenCooldown < 0){
         player2.regenSpeed *= 1.001;
         player2.healthGoingTo += player2.regenSpeed*(player2.health/30)
         player2.health += player2.regenSpeed*(player2.health/30)
