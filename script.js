@@ -169,7 +169,7 @@ function reset(){
         animate(300,player1)
         animate(300,player2)
     
-    }, 500);
+    }, 700);
 }
 
 reset()
@@ -422,7 +422,7 @@ setTimeout(() => {
     update();
     bc.drawImage(backImg,0,0,1920,1080)
 
-}, 500);
+}, 800);
 
 function updateMenu(click){
     gui.clearRect(0,0,1920,1080);
@@ -446,6 +446,8 @@ function updateMenu(click){
                 let effect = sounds.click.cloneNode()
                 effect.play();
                 menu.menuState = 0;
+                paintHealth();
+
             }
         }
         gui.drawImage(knapp,0,18,54,9,b2.x*scale,b2.y*scale,54*scale,9*scale)
