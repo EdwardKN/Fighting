@@ -121,7 +121,8 @@ var menu = {
 
 var healthBar = new Image();
 
-healthBar.src = `Images/healthbar.png`
+healthBar.src = `Images/Healthbar.png`
+
 
 player1.image.src = `Images/player1.png`;
 player2.image.src = `Images/player2.png`;
