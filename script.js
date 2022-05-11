@@ -140,7 +140,7 @@ function reset(){
             health:30,
             healthGoingTo:30,
             waitTilPunch:0,
-            equippedWeapon:weapons.test,
+            equippedWeapon:weapons.fist,
             regenCooldown:0,
             regenCooldownSpeed:1,
             regenSpeedDefault:0.06,
