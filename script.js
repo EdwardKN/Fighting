@@ -20,9 +20,7 @@ var music = {
 music.level1.loop = true;
 music.level1.volume = 0.1;
 
-setTimeout(() => {
-    music.level1.play();
-}, 200);
+
 
 png_font.setup(document.getElementById("gui").getContext("2d"));
 
@@ -50,7 +48,7 @@ const scale = 10;
 
 const groundHeight = 1080-20*scale-scale*10;
 
-
+var interacted = false;
 
 var weapons = {
     fist:{
@@ -145,6 +143,12 @@ player2.canvas.imageSmoothingEnabled = false;
 healthCanvas.imageSmoothingEnabled = false;
 bc.imageSmoothingEnabled = false;
 
+window.addEventListener("mouseup",function(event){
+    if(interacted === false){
+        music.level1.play();
+        interacted = true;
+    }
+})
 
 window.addEventListener("keydown",function(event){
     console.log(event)
