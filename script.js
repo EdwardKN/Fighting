@@ -63,69 +63,11 @@ var weapons = {
     }
 }
 
-var player1 = {
-    x:0,
-    y:groundHeight,
-    size:20,
-    speed:scale,
-    direction:0,
-    momentumY:0,
-    gravity: scale/10,
-    goingUp:false,
-    canvas:player1C.getContext("2d"),
-    crouching:false,
-    height:2,
-    color:"red",
-    image: new Image(),
-    current:{
-        x:undefined,
-        y:undefined
-    },
-    maxHealth:30,
-    health:30,
-    healthGoingTo:30,
-    waitTilPunch:0,
-    equippedWeapon:weapons.fist,
-    regenCooldown:0,
-    regenCooldownSpeed:1,
-    regenSpeedDefault:0.06,
-    regenSpeed:0.06,
-    dead:false
-}
+var player1 = undefined
 
-var player2 = {
-    x:1920-20*scale,
-    y:groundHeight,
-    size:20,
-    speed:scale,
-    direction:0,
-    momentumY:0,
-    gravity: scale/10,
-    goingUp:false,
-    canvas:player2C.getContext("2d"),
-    crouching:false,
-    height:2,
-    color:"blue",
-    image: new Image(),
-    current:{
-        x:undefined,
-        y:undefined
-    },
-    maxHealth:30,
-    health:30,
-    healthGoingTo:30,
-    waitTilPunch:0,
-    equippedWeapon:weapons.test,
-    regenCooldown:0,
-    regenCooldownSpeed:1,
-    regenSpeedDefault:0.06,
-    regenSpeed:0.06,
-    dead:false
-}
+var player2 = undefined
 
-var menu = {
-    menuState:3
-};
+var menu = undefined
 
 var mouse = {
     x:undefined,
@@ -140,17 +82,105 @@ var knapp = new Image();
 
 knapp.src = `Images/meny.png`
 
+var breakAnimate = false;
 
-player1.image.src = `Images/player1.png`;
-player2.image.src = `Images/player2.png`;
+function reset(){
+    breakAnimate = true;
+    setTimeout(() => {
+        player1 = {
+            x:0,
+            y:groundHeight,
+            size:20,
+            speed:scale,
+            direction:0,
+            momentumY:0,
+            gravity: scale/10,
+            goingUp:false,
+            canvas:player1C.getContext("2d"),
+            crouching:false,
+            height:2,
+            color:"red",
+            image: new Image(),
+            current:{
+                x:undefined,
+                y:undefined
+            },
+            maxHealth:30,
+            health:30,
+            healthGoingTo:30,
+            waitTilPunch:0,
+            equippedWeapon:weapons.fist,
+            regenCooldown:0,
+            regenCooldownSpeed:1,
+            regenSpeedDefault:0.06,
+            regenSpeed:0.06,
+            dead:false
+        }
+        
+        player2 = {
+            x:1920-20*scale,
+            y:groundHeight,
+            size:20,
+            speed:scale,
+            direction:0,
+            momentumY:0,
+            gravity: scale/10,
+            goingUp:false,
+            canvas:player2C.getContext("2d"),
+            crouching:false,
+            height:2,
+            color:"blue",
+            image: new Image(),
+            current:{
+                x:undefined,
+                y:undefined
+            },
+            maxHealth:30,
+            health:30,
+            healthGoingTo:30,
+            waitTilPunch:0,
+            equippedWeapon:weapons.test,
+            regenCooldown:0,
+            regenCooldownSpeed:1,
+            regenSpeedDefault:0.06,
+            regenSpeed:0.06,
+            dead:false
+        }
+        
+        menu = {
+            menuState:3
+        };
+    
+        player1.image.src = `Images/player1.png`;
+        player2.image.src = `Images/player2.png`;
+        player1.canvas.imageSmoothingEnabled = false;
+        player2.canvas.imageSmoothingEnabled = false;
+        player1.current = {x:0,y:0}
+        player2.current = {x:0,y:0}
+        breakAnimate = false;
 
-player1.current = {x:0,y:0}
-player2.current = {x:0,y:0}
+        player1.canvas.clearRect(0,0,1920,1080)
+        player2.canvas.clearRect(0,0,1920,1080)
 
-player1.canvas.imageSmoothingEnabled = false;
-player2.canvas.imageSmoothingEnabled = false;
+        updateMenu(false)
+        paintHealth();
+
+        animate(300,player1)
+        animate(300,player2)
+    
+    }, 500);
+}
+
+reset()
+
+
+
+
+
+
 healthCanvas.imageSmoothingEnabled = false;
 bc.imageSmoothingEnabled = false;
+
 
 window.addEventListener("mousemove",function(event){
     mouse.x = event.x
@@ -240,6 +270,16 @@ window.addEventListener("keydown",function(event){
 })
 
 window.addEventListener("keyup",function(event){
+    if(event.code === "KeyR"){
+        clearPlayer(player1);
+        clearPlayer(player2)
+        reset();
+        paintPlayer(player1)
+        paintPlayer(player2)
+        paintHealth()
+        updateMenu(false)
+        
+    }
     if(player1.dead === false && menu.menuState === 0 ||menu.menuState === 2){
         if(event.code === "KeyD" && player1.direction === 1){
             clearPlayer(player1);
@@ -519,111 +559,111 @@ function clearPlayer(p){
 }
 
 function animate(speed,p){
+    if(breakAnimate === false){
 
+        if(p.direction === 0){
+            setTimeout(() => {
+                animate(speed,p)
+            }, speed+ Math.random()*speed);
+        }else{
+            setTimeout(() => {
+                animate(speed,p)
+            }, speed);
+        }
 
-    if(p.direction === 0){
-        setTimeout(() => {
-            animate(speed,p)
-        }, speed+ Math.random()*speed);
-    }else{
-        setTimeout(() => {
-            animate(speed,p)
-        }, speed);
-    }
+        if(p.direction == 0 && p.crouching === false){
 
-    if(p.direction == 0 && p.crouching === false){
+            if(p.current.x === 0 && p.current.y === 0 || p.current.x === 0 && p.current.y === 4){
 
-        if(p.current.x === 0 && p.current.y === 0 || p.current.x === 0 && p.current.y === 4){
+                clearPlayer(p)
 
-            clearPlayer(p)
-
-            p.current = {x:1,y:0}
-            paintPlayer(p)
-            return
+                p.current = {x:1,y:0}
+                paintPlayer(p)
+                return
+            }
+            if(p.current.x === 1 && p.current.y === 0 || p.current.x === 1 && p.current.y === 4){
+                clearPlayer(p)
+                p.current = {x:0,y:0}
+                paintPlayer(p)
+                return
+            }
         }
-        if(p.current.x === 1 && p.current.y === 0 || p.current.x === 1 && p.current.y === 4){
-            clearPlayer(p)
-            p.current = {x:0,y:0}
-            paintPlayer(p)
-            return
+        
+        if(p.direction == 0 && p.crouching === true){
+            if(p.current.x === 0 && p.current.y === 4 || p.current.x === 0 && p.current.y === 0){
+                clearPlayer(p)
+                p.current = {x:1,y:4}
+                paintPlayer(p)
+                return
+            }
+            if(p.current.x === 1 && p.current.y === 4 || p.current.x === 1 && p.current.y === 0){
+                clearPlayer(p)
+                p.current = {x:0,y:4}
+                paintPlayer(p)
+                return
+            }
+        }
+        
+        if(p.direction == 1 && p.crouching === false){
+            if(p.current.x === 2 && p.current.y === 0 || p.current.x === 2 && p.current.y === 4){
+                clearPlayer(p)
+                p.current = {x:3,y:0}
+                paintPlayer(p)
+                return
+            }
+            if(p.current.x === 3 && p.current.y === 0 || p.current.x === 3 && p.current.y === 4){
+                clearPlayer(p)
+                p.current = {x:2,y:0}
+                paintPlayer(p)
+                return
+            }
+        }
+        
+        if(p.direction == 1 && p.crouching === true){
+            if(p.current.x === 2 && p.current.y === 4 || p.current.x === 2 && p.current.y === 0){
+                clearPlayer(p)
+                p.current = {x:3,y:4}
+                paintPlayer(p)
+                return
+            }
+            if(p.current.x === 3 && p.current.y === 4 || p.current.x === 3 && p.current.y === 0){
+                clearPlayer(p)
+                p.current = {x:2,y:4}
+                paintPlayer(p)
+                return
+            }
+        }
+        
+        if(p.direction == 2 && p.crouching === false){
+            if(p.current.x === 4 && p.current.y === 0 || p.current.x === 4 && p.current.y === 4){
+                clearPlayer(p)
+                p.current = {x:5,y:0}
+                paintPlayer(p)
+                return
+            }
+            if(p.current.x === 5 && p.current.y === 0 || p.current.x === 5 && p.current.y === 4){
+                clearPlayer(p)
+                p.current = {x:4,y:0}
+                paintPlayer(p)
+                return
+            }
+        }
+        
+        if(p.direction == 2 && p.crouching === true){
+            if(p.current.x === 4 && p.current.y === 4 || p.current.x === 4 && p.current.y === 0){
+                clearPlayer(p)
+                p.current = {x:5,y:4}
+                paintPlayer(p)
+                return
+            }
+            if(p.current.x === 5 && p.current.y === 4 || p.current.x === 5 && p.current.y === 0){
+                clearPlayer(p)
+                p.current = {x:4,y:4}
+                paintPlayer(p)
+                return
+            }
         }
     }
-    
-    if(p.direction == 0 && p.crouching === true){
-        if(p.current.x === 0 && p.current.y === 4 || p.current.x === 0 && p.current.y === 0){
-            clearPlayer(p)
-            p.current = {x:1,y:4}
-            paintPlayer(p)
-            return
-        }
-        if(p.current.x === 1 && p.current.y === 4 || p.current.x === 1 && p.current.y === 0){
-            clearPlayer(p)
-            p.current = {x:0,y:4}
-            paintPlayer(p)
-            return
-        }
-    }
-    
-    if(p.direction == 1 && p.crouching === false){
-        if(p.current.x === 2 && p.current.y === 0 || p.current.x === 2 && p.current.y === 4){
-            clearPlayer(p)
-            p.current = {x:3,y:0}
-            paintPlayer(p)
-            return
-        }
-        if(p.current.x === 3 && p.current.y === 0 || p.current.x === 3 && p.current.y === 4){
-            clearPlayer(p)
-            p.current = {x:2,y:0}
-            paintPlayer(p)
-            return
-        }
-    }
-    
-    if(p.direction == 1 && p.crouching === true){
-        if(p.current.x === 2 && p.current.y === 4 || p.current.x === 2 && p.current.y === 0){
-            clearPlayer(p)
-            p.current = {x:3,y:4}
-            paintPlayer(p)
-            return
-        }
-        if(p.current.x === 3 && p.current.y === 4 || p.current.x === 3 && p.current.y === 0){
-            clearPlayer(p)
-            p.current = {x:2,y:4}
-            paintPlayer(p)
-            return
-        }
-    }
-    
-    if(p.direction == 2 && p.crouching === false){
-        if(p.current.x === 4 && p.current.y === 0 || p.current.x === 4 && p.current.y === 4){
-            clearPlayer(p)
-            p.current = {x:5,y:0}
-            paintPlayer(p)
-            return
-        }
-        if(p.current.x === 5 && p.current.y === 0 || p.current.x === 5 && p.current.y === 4){
-            clearPlayer(p)
-            p.current = {x:4,y:0}
-            paintPlayer(p)
-            return
-        }
-    }
-    
-    if(p.direction == 2 && p.crouching === true){
-        if(p.current.x === 4 && p.current.y === 4 || p.current.x === 4 && p.current.y === 0){
-            clearPlayer(p)
-            p.current = {x:5,y:4}
-            paintPlayer(p)
-            return
-        }
-        if(p.current.x === 5 && p.current.y === 4 || p.current.x === 5 && p.current.y === 0){
-            clearPlayer(p)
-            p.current = {x:4,y:4}
-            paintPlayer(p)
-            return
-        }
-    }
-    
 }
 
 function paintHealth(){
@@ -699,6 +739,5 @@ function isIntersect(Ax, Ay, Aw, Ah, Bx, By, Bw, Bh){
     return Bx + Bw > Ax && By + Bh > Ay && Ax + Aw > Bx & Ay + Ah > By;
 }
 
-animate(300,player1)
-animate(300,player2)
+
 
