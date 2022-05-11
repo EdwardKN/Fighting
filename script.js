@@ -11,7 +11,8 @@ var gui = guiC.getContext("2d");
 
 var sounds = {
     punch : new Audio('Sounds/sounds/punch.mp3'),
-    death : new Audio('Sounds/sounds/death.mp3')
+    death : new Audio('Sounds/sounds/death.mp3'),
+    click : new Audio('Sounds/sounds/click.mp3') 
 };
 var music = {
     level1 : new Audio('Sounds/music/level1.mp3'),
@@ -179,6 +180,7 @@ reset()
 
 
 healthCanvas.imageSmoothingEnabled = false;
+gui.imageSmoothingEnabled = false;
 bc.imageSmoothingEnabled = false;
 
 
@@ -435,12 +437,23 @@ function updateMenu(click){
         png_font.drawText("Player 1 won!", [scale*20,scale*20], "black", scale, null,  false);
     }
     if(menu.menuState === 3){
-        gui.drawImage(knapp,500,500, 320, 100)
-        if(isIntersect(mouse.x,mouse.y,1,1,500,500,320,100)){
-            gui.fillStyle = "black"
-            gui.fillRect(500,500,320,100)
+        let b1 = {x:96-17,y:36}
+        let b2 = {x:96-27,y:48}
+        gui.drawImage(knapp,0,0,33,9,b1.x*scale,b1.y*scale,33*scale,9*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b1.x+3)*scale,b1.y*scale,27*scale,9*scale)){
+            gui.drawImage(knapp,0,9,33,9,b1.x*scale,b1.y*scale,33*scale,9*scale)
             if(click === true){
+                let effect = sounds.click.cloneNode()
+                effect.play();
                 menu.menuState = 0;
+            }
+        }
+        gui.drawImage(knapp,0,18,54,9,b2.x*scale,b2.y*scale,54*scale,9*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b2.x+3)*scale,b2.y*scale,48*scale,9*scale)){
+            gui.drawImage(knapp,0,27,54,9,b2.x*scale,b2.y*scale,54*scale,9*scale)
+            if(click === true){
+                let effect = sounds.click.cloneNode()
+                effect.play();
             }
         }
     }
@@ -727,10 +740,11 @@ function paintHealth(){
 
     if (healthBar.complete) {
         healthCanvas.clearRect(scale,scale,41*scale,8*scale)
-        healthCanvas.drawImage(healthBar,0,Math.floor(player1.maxHealth-player1.health)*8,41,8,scale,scale,41*scale,8*scale);
-
         healthCanvas.clearRect(1920-42*scale,scale,41*scale,8*scale)
-        healthCanvas.drawImage(healthBar,0,Math.floor(player2.maxHealth-player2.health)*8,41,8,1920-42*scale,scale,41*scale,8*scale);
+        if(menu.menuState === 0){
+            healthCanvas.drawImage(healthBar,0,Math.floor(player1.maxHealth-player1.health)*8,41,8,scale,scale,41*scale,8*scale);
+            healthCanvas.drawImage(healthBar,0,Math.floor(player2.maxHealth-player2.health)*8,41,8,1920-42*scale,scale,41*scale,8*scale);
+        }
         
     }    
 }
