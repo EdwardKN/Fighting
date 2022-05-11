@@ -313,7 +313,9 @@ function update(){
 
 }
 
-update();
+setTimeout(() => {
+    update();
+}, 500);
 
 function updateMenu(){
     if(menu.menuState === 0){
