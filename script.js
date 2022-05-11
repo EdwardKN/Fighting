@@ -372,13 +372,14 @@ if(player2.crouching === false){
 
     }
 
-    //bc.drawImage(backImg,0,0,1920,1080)
 
 
 }
 
 setTimeout(() => {
     update();
+    bc.drawImage(backImg,0,0,1920,1080)
+
 }, 500);
 
 function updateMenu(click){
