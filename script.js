@@ -10,7 +10,8 @@ var bc = backCanvas.getContext("2d");
 var gui = healthCanvasC.getContext("2d");
 
 var sounds = {
-    punch : new Audio('Sounds/sounds/punch.mp3')
+    punch : new Audio('Sounds/sounds/punch.mp3'),
+    death : new Audio('Sounds/sounds/death.mp3')
 };
 
 png_font.setup(document.getElementById("gui").getContext("2d"));
@@ -76,7 +77,7 @@ var player1 = {
     health:30,
     healthGoingTo:30,
     waitTilPunch:0,
-    equippedWeapon:weapons.test,
+    equippedWeapon:weapons.fist,
     regenCooldown:0,
     regenCooldownSpeed:1,
     regenSpeedDefault:0.06,
@@ -106,7 +107,7 @@ var player2 = {
     health:30,
     healthGoingTo:30,
     waitTilPunch:0,
-    equippedWeapon:weapons.test,
+    equippedWeapon:weapons.fist,
     regenCooldown:0,
     regenCooldownSpeed:1,
     regenSpeedDefault:0.06,
@@ -582,37 +583,34 @@ function paintHealth(){
     if(player2.health > player2.healthGoingTo){
         player2.health -= 0.4;
     }
-    if(player1.healthGoingTo <= 0){
+    if(player1.healthGoingTo <= 0 && player1.dead === false){
         clearPlayer(player1)
         menu.menuState = 1;
         player1.current = {x:1,y:2}
         updateMenu();
         player1.dead = true;
+        let effect = sounds.death.cloneNode()
+        effect.play();
         paintPlayer(player1)
     }
-    if(player2.healthGoingTo <= 0){
+    if(player2.healthGoingTo <= 0 && player1.dead === false){
         clearPlayer(player2)
         menu.menuState = 2;
         player2.current = {x:1,y:2}
         updateMenu();
         player2.dead = true;
+        let effect = sounds.death.cloneNode()
+        effect.play();
         paintPlayer(player2)
     }
 
     if (healthBar.complete) {
         healthCanvas.clearRect(scale,scale,41*scale,8*scale)
-        if(player1.health < player1.maxHealth-2){
-            healthCanvas.drawImage(healthBar,0,Math.floor(player1.maxHealth-player1.health)*8-1,41,8,scale,scale,41*scale,8*scale);
-        }else{
-            healthCanvas.drawImage(healthBar,0,Math.floor(player1.maxHealth-player1.health)*8,41,8,scale,scale,41*scale,8*scale);
-        }
+        healthCanvas.drawImage(healthBar,0,Math.floor(player1.maxHealth-player1.health)*8,41,8,scale,scale,41*scale,8*scale);
 
         healthCanvas.clearRect(1920-42*scale,scale,41*scale,8*scale)
-        if(player2.health < player2.maxHealth-2){
-            healthCanvas.drawImage(healthBar,0,Math.floor(player2.maxHealth-player2.health)*8-1,41,8,1920-42*scale,scale,41*scale,8*scale);
-        }else{
-            healthCanvas.drawImage(healthBar,0,Math.floor(player2.maxHealth-player2.health)*8,41,8,1920-42*scale,scale,41*scale,8*scale);
-        }
+        healthCanvas.drawImage(healthBar,0,Math.floor(player2.maxHealth-player2.health)*8,41,8,1920-42*scale,scale,41*scale,8*scale);
+        
     }    
 }
 
