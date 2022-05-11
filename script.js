@@ -13,6 +13,16 @@ var sounds = {
     punch : new Audio('Sounds/sounds/punch.mp3'),
     death : new Audio('Sounds/sounds/death.mp3')
 };
+var music = {
+    level1 : new Audio('Sounds/music/level1.mp3'),
+};
+
+music.level1.loop = true;
+music.level1.volume = 0.1;
+
+setTimeout(() => {
+    music.level1.play();
+}, 200);
 
 png_font.setup(document.getElementById("gui").getContext("2d"));
 
