@@ -7,7 +7,7 @@ var guiC = document.getElementById("gui")
 var healthCanvas = healthCanvasC.getContext("2d");
 var bc = backCanvas.getContext("2d");
 
-var gui = healthCanvasC.getContext("2d");
+var gui = guiC.getContext("2d");
 
 var sounds = {
     punch : new Audio('Sounds/sounds/punch.mp3'),
@@ -115,7 +115,7 @@ var player2 = {
     health:30,
     healthGoingTo:30,
     waitTilPunch:0,
-    equippedWeapon:weapons.fist,
+    equippedWeapon:weapons.test,
     regenCooldown:0,
     regenCooldownSpeed:1,
     regenSpeedDefault:0.06,
@@ -124,12 +124,21 @@ var player2 = {
 }
 
 var menu = {
-    menuState:0
+    menuState:3
 };
+
+var mouse = {
+    x:undefined,
+    Y:undefined
+}
 
 var healthBar = new Image();
 
 healthBar.src = `Images/Healthbar.png`
+
+var knapp = new Image();
+
+knapp.src = `Images/meny.png`
 
 
 player1.image.src = `Images/player1.png`;
@@ -143,16 +152,28 @@ player2.canvas.imageSmoothingEnabled = false;
 healthCanvas.imageSmoothingEnabled = false;
 bc.imageSmoothingEnabled = false;
 
+window.addEventListener("mousemove",function(event){
+    mouse.x = event.x
+    mouse.y = event.y
+    updateMenu(false);
+})
+window.addEventListener("mousedown",function(event){
+    updateMenu(true);
+})
 window.addEventListener("mouseup",function(event){
     if(interacted === false){
         music.level1.play();
         interacted = true;
+        paintHealth();
+
     }
+    updateMenu(false);
+
 })
 
 window.addEventListener("keydown",function(event){
     console.log(event)
-    if(player1.dead === false){
+    if(player1.dead === false&& menu.menuState === 0 ||menu.menuState === 2){
         if(event.code === "KeyD" && player1.direction !== 1){
             player1.direction = 1;
             if(player1.crouching === false){
@@ -184,7 +205,7 @@ window.addEventListener("keydown",function(event){
             }
         }
     }
-    if(player2.dead === false){
+    if(player2.dead === false && menu.menuState === 0 ||menu.menuState === 1){
         if(event.code === "ArrowRight" && player2.direction !== 1){
             player2.direction = 1;
             if(player2.crouching === false){
@@ -219,7 +240,7 @@ window.addEventListener("keydown",function(event){
 })
 
 window.addEventListener("keyup",function(event){
-    if(player1.dead === false){
+    if(player1.dead === false && menu.menuState === 0 ||menu.menuState === 2){
         if(event.code === "KeyD" && player1.direction === 1){
             clearPlayer(player1);
 
@@ -253,7 +274,7 @@ window.addEventListener("keyup",function(event){
         }
     }
 
-    if(player2.dead === false){
+    if(player2.dead === false && menu.menuState === 0 ||menu.menuState === 1){
         if(event.code === "ArrowRight" && player2.direction === 1){
             clearPlayer(player2);
 
@@ -316,14 +337,26 @@ function update(){
     if(player2.crouching === true){
         crouch(player2);
     }
+    
+    if(player1.crouching === false){
+        player1.waitTilPunch -= player1.equippedWeapon.speed;
+    }else{
+        player1.waitTilPunch -= player1.equippedWeapon.speed/2;
+    }
 
-    player1.waitTilPunch -= player1.equippedWeapon.speed;
-    player2.waitTilPunch -= player1.equippedWeapon.speed;
-
+if(player2.crouching === false){
+        player2.waitTilPunch -= player2.equippedWeapon.speed;
+    }else{
+        player2.waitTilPunch -= player2.equippedWeapon.speed/2;
+    }
     
 
     player1.regenCooldown -= player1.regenCooldownSpeed;
     player2.regenCooldown -= player1.regenCooldownSpeed;
+
+    if(player1.regenCooldown > 0 || player2.regenCooldown > 0){
+        paintHealth();
+    }
     if(player1.regenCooldown < 0 && player1.regenSpeed !== 0){
         player1.regenSpeed *= 1.001;
         player1.healthGoingTo += player1.regenSpeed*(player1.health/30)
@@ -348,7 +381,9 @@ setTimeout(() => {
     update();
 }, 500);
 
-function updateMenu(){
+function updateMenu(click){
+    gui.clearRect(0,0,1920,1080);
+
     if(menu.menuState === 0){
 
     }
@@ -357,6 +392,16 @@ function updateMenu(){
     }
     if(menu.menuState === 2){
         png_font.drawText("Player 1 won!", [scale*20,scale*20], "black", scale, null,  false);
+    }
+    if(menu.menuState === 3){
+        gui.drawImage(knapp,500,500, 320, 100)
+        if(isIntersect(mouse.x,mouse.y,1,1,500,500,320,100)){
+            gui.fillStyle = "black"
+            gui.fillRect(500,500,320,100)
+            if(click === true){
+                menu.menuState = 0;
+            }
+        }
     }
 }
 
@@ -429,7 +474,11 @@ function punch(p){
     
     if(p === 1){
         if(isIntersect(player1.x-(player1.equippedWeapon.range*scale),player1.y-(player1.equippedWeapon.range*scale),player1.size*scale+(player1.equippedWeapon.range*scale*2),player1.size*scale+(player1.equippedWeapon.range*scale*2),player2.x,player2.y,player2.size*scale,player2.size*scale) === 1){
-            player2.healthGoingTo -= player1.equippedWeapon.damage;
+            if(player1.crouching === false){
+                player2.healthGoingTo -= player1.equippedWeapon.damage;
+            }else{
+                player2.healthGoingTo -= player1.equippedWeapon.damage/2;
+            }
             let effect = sounds.punch.cloneNode()
             effect.play();
             player2.regenCooldown = 100;
@@ -440,7 +489,11 @@ function punch(p){
     }
     if(p === 2){
         if(isIntersect(player2.x-(player2.equippedWeapon.range*scale),player2.y-(player2.equippedWeapon.range*scale),player2.size*scale+(player2.equippedWeapon.range*scale*2),player2.size*scale+(player2.equippedWeapon.range*scale*2),player1.x,player1.y,player1.size*scale,player1.size*scale) === 1){
-            player1.healthGoingTo -= player2.equippedWeapon.damage;
+            if(player2.crouching === false){
+                player1.healthGoingTo -= player2.equippedWeapon.damage;
+            }else{
+                player1.healthGoingTo -= player2.equippedWeapon.damage/2;
+            }
             let effect = sounds.punch.cloneNode()
             effect.play();
             player1.regenCooldown = 100;
