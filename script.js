@@ -308,7 +308,7 @@ function update(){
     
     paintHealth();
 
-    bc.drawImage(backImg,0,0,1920,1080)
+    //bc.drawImage(backImg,0,0,1920,1080)
 
 
 }
