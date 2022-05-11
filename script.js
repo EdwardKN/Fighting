@@ -321,7 +321,23 @@ function update(){
     player2.waitTilPunch -= player1.equippedWeapon.speed;
 
     
-    paintHealth();
+
+    player1.regenCooldown -= player1.regenCooldownSpeed;
+    player2.regenCooldown -= player1.regenCooldownSpeed;
+    if(player1.regenCooldown < 0 && player1.regenSpeed !== 0){
+        player1.regenSpeed *= 1.001;
+        player1.healthGoingTo += player1.regenSpeed*(player1.health/30)
+        player1.health += player1.regenSpeed*(player1.health/30)
+        paintHealth();
+
+    }
+    if(player2.regenCooldown < 0 && player2.regenSpeed !== 0){
+        player2.regenSpeed *= 1.001;
+        player2.healthGoingTo += player2.regenSpeed*(player2.health/30)
+        player2.health += player2.regenSpeed*(player2.health/30)
+        paintHealth();
+
+    }
 
     //bc.drawImage(backImg,0,0,1920,1080)
 
@@ -418,6 +434,8 @@ function punch(p){
             effect.play();
             player2.regenCooldown = 100;
             player2.regenSpeed = player2.regenSpeedDefault;
+            paintHealth();
+
         }
     }
     if(p === 2){
@@ -427,6 +445,8 @@ function punch(p){
             effect.play();
             player1.regenCooldown = 100;
             player1.regenSpeed = player1.regenSpeedDefault;
+            paintHealth();
+
         }
     }
 }
@@ -565,27 +585,17 @@ function paintHealth(){
     if(player2.waitTilPunch <= 0){
         player2.waitTilPunch = 0;
     }
-    player1.regenCooldown -= player1.regenCooldownSpeed;
-    player2.regenCooldown -= player1.regenCooldownSpeed;
+    
 
     if(player1.health > 30){
         player1.health = 30
-        player1.regenSpeed =0
+        player1.regenSpeed = 0
     }
     if(player2.health > 30){
         player2.health = 30
-        player2.regenSpeed =0
+        player2.regenSpeed = 0
     }
-    if(player1.regenCooldown < 0){
-        player1.regenSpeed *= 1.001;
-        player1.healthGoingTo += player1.regenSpeed*(player1.health/30)
-        player1.health += player1.regenSpeed*(player1.health/30)
-    }
-    if(player2.regenCooldown < 0){
-        player2.regenSpeed *= 1.001;
-        player2.healthGoingTo += player2.regenSpeed*(player2.health/30)
-        player2.health += player2.regenSpeed*(player2.health/30)
-    }
+    
 
     if(player1.healthGoingTo > player1.maxHealth){
         player1.healthGoingTo = player1.maxHealth
