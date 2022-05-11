@@ -593,7 +593,7 @@ function paintHealth(){
         effect.play();
         paintPlayer(player1)
     }
-    if(player2.healthGoingTo <= 0 && player1.dead === false){
+    if(player2.healthGoingTo <= 0 && player2.dead === false){
         clearPlayer(player2)
         menu.menuState = 2;
         player2.current = {x:1,y:2}
