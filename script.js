@@ -204,6 +204,10 @@ window.addEventListener("mouseup",function(event){
 })
 
 window.addEventListener("keydown",function(event){
+    if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(event.code) > -1) {
+        event.preventDefault();
+    }
+
     console.log(event)
     if(player1.dead === false&& menu.menuState === 0 ||menu.menuState === 2){
         if(event.code === "KeyD" && player1.direction !== 1){
@@ -386,7 +390,7 @@ function update(){
         player1.waitTilPunch -= player1.equippedWeapon.speed/2;
     }
 
-if(player2.crouching === false){
+    if(player2.crouching === false){
         player2.waitTilPunch -= player2.equippedWeapon.speed;
     }else{
         player2.waitTilPunch -= player2.equippedWeapon.speed/2;
@@ -404,7 +408,6 @@ if(player2.crouching === false){
         player1.healthGoingTo += player1.regenSpeed*(player1.health/30)
         player1.health += player1.regenSpeed*(player1.health/30)
         paintHealth();
-
     }
     if(player2.regenCooldown < 0 && player2.regenSpeed !== 0){
         player2.regenSpeed *= 1.001;
