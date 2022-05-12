@@ -1,4 +1,4 @@
-# Fighting
+# Stick World : Fighter Master
 
 slåss är coolt
 
