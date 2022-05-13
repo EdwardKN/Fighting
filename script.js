@@ -110,7 +110,7 @@ function reset(){
             health:30,
             healthGoingTo:30,
             waitTilPunch:0,
-            equippedWeapon:weapons.fist,
+            equippedWeapon:weapons.test,
             regenCooldown:0,
             regenCooldownSpeed:1,
             regenSpeedDefault:0.06,
@@ -140,7 +140,7 @@ function reset(){
             health:30,
             healthGoingTo:30,
             waitTilPunch:0,
-            equippedWeapon:weapons.fist,
+            equippedWeapon:weapons.test,
             regenCooldown:0,
             regenCooldownSpeed:1,
             regenSpeedDefault:0.06,
@@ -173,6 +173,8 @@ function reset(){
 }
 
 reset()
+
+
 
 
 
@@ -276,16 +278,7 @@ window.addEventListener("keydown",function(event){
 })
 
 window.addEventListener("keyup",function(event){
-    if(event.code === "KeyR"){
-        clearPlayer(player1);
-        clearPlayer(player2)
-        reset();
-        paintPlayer(player1)
-        paintPlayer(player2)
-        paintHealth()
-        updateMenu(false)
-        
-    }
+    
     if(player1.dead === false && menu.menuState === 0 ||menu.menuState === 2){
         if(event.code === "KeyD" && player1.direction === 1){
             clearPlayer(player1);
@@ -435,9 +428,32 @@ function updateMenu(click){
     }
     if(menu.menuState === 1){
         png_font.drawText("Player 2 won!", [scale*20,scale*20], "black", scale, null,  false);
+        let b1 = {x:96-14,y:36}
+        gui.fillStyle = "white"
+        gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b1.x)*scale,b1.y*scale,40*scale,13*scale)){
+            gui.fillStyle = "black"
+            gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
+            if(click === true){
+                resetStuff()           
+            }
+        }
+        png_font.drawText("Reset", [scale*(96-13),scale*33], "black", scale, null,  false);
     }
     if(menu.menuState === 2){
         png_font.drawText("Player 1 won!", [scale*20,scale*20], "black", scale, null,  false);
+        let b1 = {x:96-14,y:36}
+        gui.fillStyle = "white"
+        gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b1.x)*scale,b1.y*scale,40*scale,13*scale)){
+            gui.fillStyle = "black"
+            gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
+            if(click === true){
+                resetStuff()           
+            }
+        }
+        png_font.drawText("Reset", [scale*(96-13),scale*33], "black", scale, null,  false);
+
     }
     if(menu.menuState === 3){
         let b1 = {x:96-17,y:36}
@@ -752,6 +768,16 @@ function paintHealth(){
         }
         
     }    
+}
+
+function resetStuff(){
+    clearPlayer(player1);
+    clearPlayer(player2)
+    reset();
+    paintPlayer(player1)
+    paintPlayer(player2)
+    paintHealth()
+    updateMenu(false)
 }
 
 function isIntersect(Ax, Ay, Aw, Ah, Bx, By, Bw, Bh){
