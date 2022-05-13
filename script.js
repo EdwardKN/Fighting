@@ -187,22 +187,29 @@ bc.imageSmoothingEnabled = false;
 
 
 window.addEventListener("mousemove",function(event){
+    
     mouse.x = event.x
     mouse.y = event.y
-    updateMenu(false);
+    if(menu !== undefined){
+        updateMenu(false);
+    }
 })
 window.addEventListener("mousedown",function(event){
-    updateMenu(true);
+    if(menu !== undefined){
+        updateMenu(true);
+    }
 })
 window.addEventListener("mouseup",function(event){
-    if(interacted === false){
-        music.level1.play();
-        interacted = true;
-        paintHealth();
+    if(menu !== undefined){
 
+        if(interacted === false){
+            music.level1.play();
+            interacted = true;
+            paintHealth();
+
+        }
+        updateMenu(false);
     }
-    updateMenu(false);
-
 })
 
 window.addEventListener("keydown",function(event){
