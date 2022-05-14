@@ -654,7 +654,7 @@ function moveUp(p){
 }
 function crouch(p){
     clearPlayer(p)
-    p.height = 1;
+    p.height = 1.5;
     paintPlayer(p)
     if(p.y > groundHeight + p.height*(p.size*scale)){
         clearPlayer(p)
