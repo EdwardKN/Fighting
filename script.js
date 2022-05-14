@@ -21,7 +21,7 @@ var music = {
 };
 
 music.level1.loop = true;
-music.level1.volume = 0.1;
+music.level1.volume = 0.01;
 
 
 
@@ -105,9 +105,8 @@ window.addEventListener('load', function(){
     fakeCRT(backCanvas)
     fakeCRT(player1C)
     fakeCRT(player2C)
-    fakeCRT(healthCanvas)
+    fakeCRT(healthCanvasC)
     fakeCRT(guiC)
-    fakeCRT(effecC)
 }, false);
 
 function addEffect(){
@@ -124,7 +123,7 @@ function addEffect(){
     effect.drawImage(scanlinesImg,0,0,800,192,0,0,1920,1080)
     effect.globalAlpha = 1
     effect.drawImage(bezelImg,0,0,1920,1080)
-
+    updateMenu()
 }
 
 function removeEffect(){
@@ -138,6 +137,8 @@ function removeEffect(){
     bc.drawImage(backImg,0,0,1920,1080)
 
     effect.clearRect(0,0,1920,1080)
+    updateMenu()
+
 }
 
 function fakeCRT(i) {
@@ -188,8 +189,21 @@ healthCanvas.imageSmoothingEnabled = false;
 gui.imageSmoothingEnabled = false;
 bc.imageSmoothingEnabled = false;
 
+player1 = {
+    x:10
+}
+player2 = {
+    x:1920-20*scale
+}
+
 function reset(){
     breakAnimate = true;
+    player1.x = 10
+    player2.x = 1920-20*scale
+    menu = {
+            menuState:3
+        };
+    
     setTimeout(() => {
         player1 = {
             x:10,
@@ -251,10 +265,7 @@ function reset(){
             dead:false
         }
         
-        menu = {
-            menuState:3
-        };
-    
+        
         player1.image.src = `Images/player1.png`;
         player2.image.src = `Images/player2.png`;
         player1.canvas.imageSmoothingEnabled = false;
@@ -274,7 +285,6 @@ function reset(){
     
     }, 700);
 }
-
 reset()
 
 
@@ -288,6 +298,7 @@ window.addEventListener("mousemove",function(event){
         updateMenu(false);
     }
 })
+
 window.addEventListener("mousedown",function(event){
     if(menu !== undefined){
         updateMenu(true);
@@ -524,9 +535,9 @@ function update(){
 
     }
 
-    gui.clearRect(0,0,100,100);
+    gui.clearRect(0,0,200,200);
     gui.fillStyle = "white"
-    gui.fillText("FPS:"+fps,50,40);
+    gui.fillText("FPS:"+fps,100,100);
 
 }
 
@@ -538,10 +549,26 @@ setTimeout(() => {
 function updateMenu(click){
     gui.clearRect(0,0,1920,1080);
     gui.fillStyle = "white"
-    gui.fillText("FPS:"+fps,50,40);
+    gui.fillText("FPS:"+fps,100,100);
 
     if(menu.menuState === 0){
-
+        let b3
+        if(effectOn === false){
+            b3 = {x:182,y:98}
+        }else{
+            b3 = {x:176,y:95}
+        }
+        gui.drawImage(knapp,10,36,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            gui.drawImage(knapp,0,36,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+            if(click === true){
+                menu.menuState = 3
+                resetStuff()        
+                playSound(sounds.click)
+                updateMenu(false);
+                return;
+            }
+        }
     }
     if(menu.menuState === 1){
         png_font.drawText("Player 2 won!", [scale*20,scale*20], "black", scale, null,  false);
@@ -552,7 +579,10 @@ function updateMenu(click){
             gui.fillStyle = "black"
             gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
             if(click === true){
-                resetStuff()           
+                resetStuff()        
+                playSound(sounds.click)   
+                menu.menuState = 3;
+                updateMenu(false);
             }
         }
         png_font.drawText("Reset", [scale*(96-13),scale*33], "black", scale, null,  false);
@@ -566,7 +596,11 @@ function updateMenu(click){
             gui.fillStyle = "black"
             gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
             if(click === true){
-                resetStuff()           
+                resetStuff()     
+                playSound(sounds.click)
+                menu.menuState = 3;
+                updateMenu(false);
+      
             }
         }
         png_font.drawText("Reset", [scale*(96-13),scale*33], "black", scale, null,  false);
@@ -575,24 +609,58 @@ function updateMenu(click){
     if(menu.menuState === 3){
 
         let b1 = {x:96-17,y:36}
-        let b2 = {x:96-27,y:48}
         gui.drawImage(knapp,0,0,33,9,b1.x*scale,b1.y*scale,33*scale,9*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b1.x+3)*scale,b1.y*scale,27*scale,9*scale)){
             gui.drawImage(knapp,0,9,33,9,b1.x*scale,b1.y*scale,33*scale,9*scale)
             if(click === true){
-                let effect = sounds.click.cloneNode()
-                effect.play();
+                playSound(sounds.click)
                 menu.menuState = 0;
                 paintHealth();
+                updateMenu(false);
 
             }
         }
+        let b2 = {x:96-27,y:48}
         gui.drawImage(knapp,0,18,54,9,b2.x*scale,b2.y*scale,54*scale,9*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b2.x+3)*scale,b2.y*scale,48*scale,9*scale)){
             gui.drawImage(knapp,0,27,54,9,b2.x*scale,b2.y*scale,54*scale,9*scale)
             if(click === true){
-                let effect = sounds.click.cloneNode()
-                effect.play();
+                playSound(sounds.click)
+                updateMenu(false);
+            }
+        }
+        let b3
+        if(effectOn === false){
+            b3 = {x:182,y:98}
+        }else{
+            b3 = {x:176,y:95}
+        }
+        gui.drawImage(knapp,10,46,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            gui.drawImage(knapp,0,46,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+            if(click === true){
+                menu.menuState = 4
+                playSound(sounds.click)
+                updateMenu(false);
+                return;
+            }
+        }
+    }
+    if(menu.menuState === 4){
+        let b3
+        if(effectOn === false){
+            b3 = {x:182,y:98}
+        }else{
+            b3 = {x:176,y:95}
+        }
+        gui.drawImage(knapp,10,36,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            gui.drawImage(knapp,0,36,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+            if(click === true){
+                menu.menuState = 3
+                playSound(sounds.click)
+                updateMenu(false);
+                return;
             }
         }
     }
@@ -672,8 +740,7 @@ function punch(p){
             }else{
                 player2.healthGoingTo -= player1.equippedWeapon.damage/2;
             }
-            let effect = sounds.punch.cloneNode()
-            effect.play();
+            playSound(sounds.punch)
             player2.regenCooldown = 100;
             player2.regenSpeed = player2.regenSpeedDefault;
             paintHealth();
@@ -687,8 +754,8 @@ function punch(p){
             }else{
                 player1.healthGoingTo -= player2.equippedWeapon.damage/2;
             }
-            let effect = sounds.punch.cloneNode()
-            effect.play();
+            playSound(sounds.punch)
+
             player1.regenCooldown = 100;
             player1.regenSpeed = player1.regenSpeedDefault;
             paintHealth();
@@ -863,7 +930,7 @@ function paintHealth(){
         updateMenu();
         player1.dead = true;
         let effect = sounds.death.cloneNode()
-        effect.play();
+        playSound(sounds.death)
         paintPlayer(player1)
     }
     if(player2.healthGoingTo <= 0 && player2.dead === false){
@@ -872,8 +939,7 @@ function paintHealth(){
         player2.current = {x:1,y:2}
         updateMenu();
         player2.dead = true;
-        let effect = sounds.death.cloneNode()
-        effect.play();
+        playSound(sounds.death)
         paintPlayer(player2)
     }
 
@@ -936,4 +1002,9 @@ function count() {
     oldCount2++;
     return oldCount;
 
+}
+
+function playSound(sound){
+    let effect = sound.cloneNode()
+    effect.play();
 }
