@@ -3,11 +3,13 @@ var player1C = document.getElementById("player1")
 var player2C = document.getElementById("player2")
 var healthCanvasC = document.getElementById("health")
 var guiC = document.getElementById("gui")
+var effecC = document.getElementById("effect")
 
 var healthCanvas = healthCanvasC.getContext("2d");
 var bc = backCanvas.getContext("2d");
 
 var gui = guiC.getContext("2d");
+var effect = effecC.getContext("2d");
 
 var sounds = {
     punch : new Audio('Sounds/sounds/punch.mp3'),
@@ -29,7 +31,13 @@ let backImg = new Image();
 
 backImg.src = `Images/back.png`
 
+let scanlinesImg = new Image();
 
+scanlinesImg.src = `Images/scanlines.png`
+
+let bezelImg = new Image();
+
+bezelImg.src = `Images/bezel.png`
 
 backCanvas.width = 1920;
 backCanvas.height = 1080;
@@ -41,13 +49,19 @@ healthCanvasC.width = 1920;
 healthCanvasC.height = 1080;
 guiC.width = 1920;
 guiC.height = 1080;
+effecC.width = 1920;
+effecC.height = 1080;
 
 document.width = 1920;
 document.height = 1080;
 
+var fps = undefined;
+
+var fpsMultiplier = fps / 60;
+
 const scale = 10;
 
-const groundHeight = 1080-20*scale-scale*10;
+var groundHeight = 1080-20*scale-scale*10;
 
 var interacted = false;
 
@@ -85,11 +99,100 @@ knapp.src = `Images/meny.png`
 
 var breakAnimate = false;
 
+var effectOn = false;
+
+window.addEventListener('load', function(){
+    fakeCRT(backCanvas)
+    fakeCRT(player1C)
+    fakeCRT(player2C)
+    fakeCRT(healthCanvas)
+    fakeCRT(guiC)
+    fakeCRT(effecC)
+}, false);
+
+function addEffect(){
+    player1.canvas.clearRect(0,0,1920,1080);
+    player2.canvas.clearRect(0,0,1920,1080);
+    groundHeight-=30;
+    player1.y = groundHeight
+    player2.y = groundHeight
+    effectOn = true;
+    bc.clearRect(0,0,1920,1080)
+    bc.drawImage(backImg,0,0-30,1920,1080)
+
+    effect.globalAlpha = 0.3
+    effect.drawImage(scanlinesImg,0,0,800,192,0,0,1920,1080)
+    effect.globalAlpha = 1
+    effect.drawImage(bezelImg,0,0,1920,1080)
+
+}
+
+function removeEffect(){
+    player1.canvas.clearRect(0,0,1920,1080);
+    player2.canvas.clearRect(0,0,1920,1080);
+    groundHeight+=30;
+    player1.y = groundHeight;
+    player2.y = groundHeight;
+    effectOn = false;
+    bc.clearRect(0,0,1920,1080)
+    bc.drawImage(backImg,0,0,1920,1080)
+
+    effect.clearRect(0,0,1920,1080)
+}
+
+function fakeCRT(i) {
+    var glcanvas, source, srcctx, texture, w, h, hw, hh, w75;
+    
+    try {
+        glcanvas = fx.canvas();
+    } catch (e) {return;}
+    
+
+    source = i;
+    srcctx = source.getContext('2d');
+    
+    texture = glcanvas.texture(source);
+    
+    w = source.width;
+    h = source.height;
+    hw = w / 2;
+    hh = h / 2;
+    w75 = w * 0.75;
+
+    source.parentNode.insertBefore(glcanvas, source);
+    source.style.display = 'none';
+    glcanvas.className = source.className;
+    glcanvas.id = source.id;
+    source.id = 'old_' + source.id;
+    
+    
+    setInterval(function () {
+    
+        texture.loadContentsOf(source);
+        if(effectOn === true){
+            glcanvas.draw(texture)
+            .bulgePinch(hw, hh, w75, 0.08)
+            .vignette(0.25, 0.6)
+            .update();
+        }else{
+            glcanvas.draw(texture)
+            .bulgePinch(hw, hh, w75, 0)
+            .vignette(0, 0)
+            .update();
+        }
+        
+    }, Math.floor(1000 / 60));
+}
+
+healthCanvas.imageSmoothingEnabled = false;
+gui.imageSmoothingEnabled = false;
+bc.imageSmoothingEnabled = false;
+
 function reset(){
     breakAnimate = true;
     setTimeout(() => {
         player1 = {
-            x:0,
+            x:10,
             y:groundHeight,
             size:20,
             speed:scale,
@@ -177,15 +280,6 @@ reset()
 
 
 
-
-
-
-
-healthCanvas.imageSmoothingEnabled = false;
-gui.imageSmoothingEnabled = false;
-bc.imageSmoothingEnabled = false;
-
-
 window.addEventListener("mousemove",function(event){
     
     mouse.x = event.x
@@ -206,8 +300,12 @@ window.addEventListener("mouseup",function(event){
             music.level1.play();
             interacted = true;
             paintHealth();
+            
+
 
         }
+        var parentDiv = document.getElementById("content");
+        parentDiv.requestFullscreen();
         updateMenu(false);
     }
 })
@@ -285,6 +383,16 @@ window.addEventListener("keydown",function(event){
 })
 
 window.addEventListener("keyup",function(event){
+
+    if(event.code === "KeyO"){
+        if(effectOn === true){
+            removeEffect();
+            return;
+        }else{
+            addEffect();
+            return;
+        }
+    }
     
     if(player1.dead === false && menu.menuState === 0 ||menu.menuState === 2){
         if(event.code === "KeyD" && player1.direction === 1){
@@ -354,7 +462,6 @@ window.addEventListener("keyup",function(event){
 })
 
 function update(){
-    requestAnimationFrame(update)
 
 
 
@@ -417,18 +524,21 @@ function update(){
 
     }
 
-
+    gui.clearRect(0,0,100,100);
+    gui.fillStyle = "white"
+    gui.fillText("FPS:"+fps,50,40);
 
 }
 
 setTimeout(() => {
-    update();
     bc.drawImage(backImg,0,0,1920,1080)
-
+    
 }, 800);
 
 function updateMenu(click){
     gui.clearRect(0,0,1920,1080);
+    gui.fillStyle = "white"
+    gui.fillText("FPS:"+fps,50,40);
 
     if(menu.menuState === 0){
 
@@ -463,6 +573,7 @@ function updateMenu(click){
 
     }
     if(menu.menuState === 3){
+
         let b1 = {x:96-17,y:36}
         let b2 = {x:96-27,y:48}
         gui.drawImage(knapp,0,0,33,9,b1.x*scale,b1.y*scale,33*scale,9*scale)
@@ -502,9 +613,9 @@ function moveLeft(p){
     p.x -= p.speed;
     paintPlayer(p)
 
-    if(p.x < (0)){
+    if(p.x < (10)){
         clearPlayer(p)
-        p.x = (0);
+        p.x = (10);
         paintPlayer(p)
     }
 }
@@ -767,11 +878,11 @@ function paintHealth(){
     }
 
     if (healthBar.complete) {
-        healthCanvas.clearRect(scale,scale,41*scale,8*scale)
-        healthCanvas.clearRect(1920-42*scale,scale,41*scale,8*scale)
+        healthCanvas.clearRect(scale*4,scale*4,41*scale,8*scale)
+        healthCanvas.clearRect(1920-46*scale,scale*4,41*scale,8*scale)
         if(menu.menuState === 0){
-            healthCanvas.drawImage(healthBar,0,Math.floor(player1.maxHealth-player1.health)*8,41,8,scale,scale,41*scale,8*scale);
-            healthCanvas.drawImage(healthBar,0,Math.floor(player2.maxHealth-player2.health)*8,41,8,1920-42*scale,scale,41*scale,8*scale);
+            healthCanvas.drawImage(healthBar,0,Math.floor(player1.maxHealth-player1.health)*8,41,8,scale*4,scale*4,41*scale,8*scale);
+            healthCanvas.drawImage(healthBar,0,Math.floor(player2.maxHealth-player2.health)*8,41,8,1920-46*scale,scale*4,41*scale,8*scale);
         }
         
     }    
@@ -791,5 +902,38 @@ function isIntersect(Ax, Ay, Aw, Ah, Bx, By, Bw, Bh){
     return Bx + Bw > Ax && By + Bh > Ay && Ax + Aw > Bx & Ay + Ah > By;
 }
 
+var interval1 = undefined;
 
 
+function updateFPS(thisFps) {
+    clearInterval(interval1);
+    interval1 = undefined;
+    interval1 = setInterval(update, 1000 / thisFps);
+    fpsMultiplier = thisFps / 60;
+}
+
+setInterval(() => {
+    fps = oldCount - oldCount3;
+    oldCount3 = oldCount;
+    if (fps !== oldFPS) {
+        updateFPS(fps)
+    }
+    oldFPS = fps;
+}, 1000);
+
+var oldFPS = 0;
+
+var oldCount3 = 0;
+var oldCount2 = 0;
+var oldCount = 0;
+
+count()
+
+function count() {
+    requestAnimationFrame(count)
+
+    oldCount = oldCount2;
+    oldCount2++;
+    return oldCount;
+
+}
