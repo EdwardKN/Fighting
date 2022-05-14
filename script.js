@@ -4,6 +4,8 @@ var player2C = document.getElementById("player2")
 var healthCanvasC = document.getElementById("health")
 var guiC = document.getElementById("gui")
 var effecC = document.getElementById("effect")
+var testC = document.getElementById("test")
+var test = testC.getContext("2d");
 
 var healthCanvas = healthCanvasC.getContext("2d");
 var bc = backCanvas.getContext("2d");
@@ -51,6 +53,9 @@ guiC.width = 1920;
 guiC.height = 1080;
 effecC.width = 1920;
 effecC.height = 1080;
+
+testC.width = 1920;
+testC.height = 1080;
 
 document.width = 1920;
 document.height = 1080;
@@ -102,11 +107,7 @@ var breakAnimate = false;
 var effectOn = false;
 
 window.addEventListener('load', function(){
-    fakeCRT(backCanvas)
-    fakeCRT(player1C)
-    fakeCRT(player2C)
-    fakeCRT(healthCanvasC)
-    fakeCRT(guiC)
+    fakeCRT(testC)
 }, false);
 
 function addEffect(){
@@ -119,7 +120,7 @@ function addEffect(){
     bc.clearRect(0,0,1920,1080)
     bc.drawImage(backImg,0,0-30,1920,1080)
 
-    effect.globalAlpha = 0.3
+    effect.globalAlpha = 0.2
     effect.drawImage(scanlinesImg,0,0,800,192,0,0,1920,1080)
     effect.globalAlpha = 1
     effect.drawImage(bezelImg,0,0,1920,1080)
@@ -142,7 +143,7 @@ function removeEffect(){
 }
 
 function fakeCRT(i) {
-    var glcanvas, source, srcctx, texture, w, h, hw, hh, w75;
+    var glcanvas, source, texture, w, h, hw, hh, w75;
     
     try {
         glcanvas = fx.canvas();
@@ -172,8 +173,8 @@ function fakeCRT(i) {
         texture.loadContentsOf(source);
         if(effectOn === true){
             glcanvas.draw(texture)
-            .bulgePinch(hw, hh, w75, 0.08)
-            .vignette(0.25, 0.6)
+            .bulgePinch(hw, hh, w75, 0.10)
+            .vignette(0.25, 0.6).noise(0.05).hueSaturation(0, -0.1)
             .update();
         }else{
             glcanvas.draw(texture)
@@ -537,7 +538,14 @@ function update(){
 
     gui.clearRect(0,0,200,200);
     gui.fillStyle = "white"
-    gui.fillText("FPS:"+fps,100,100);
+    gui.fillText("FPS:"+fps,50,40);
+
+    test.drawImage(backCanvas, 0, 0);
+    test.drawImage(player1C, 0, 0);
+    test.drawImage(player2C, 0, 0);
+    test.drawImage(healthCanvasC, 0, 0);
+    test.drawImage(guiC, 0, 0);
+    test.drawImage(effecC, 0, 0);
 
 }
 
@@ -548,8 +556,7 @@ setTimeout(() => {
 
 function updateMenu(click){
     gui.clearRect(0,0,1920,1080);
-    gui.fillStyle = "white"
-    gui.fillText("FPS:"+fps,100,100);
+
 
     if(menu.menuState === 0){
         let b3
