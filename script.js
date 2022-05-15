@@ -633,6 +633,7 @@ function updateMenu(click){
             gui.drawImage(knapp,0,27,54,9,b2.x*scale,b2.y*scale,54*scale,9*scale)
             if(click === true){
                 playSound(sounds.click)
+                menu.menuState = 5;
                 updateMenu(false);
             }
         }
@@ -642,6 +643,7 @@ function updateMenu(click){
             gui.drawImage(knapp,0,45,59,9,b4.x*scale,b4.y*scale,54*scale,9*scale)
             if(click === true){
                 playSound(sounds.click)
+                menu.menuState = 6;
                 updateMenu(false);
             }
         }
@@ -663,6 +665,42 @@ function updateMenu(click){
         }
     }
     if(menu.menuState === 4){
+        let b3
+        if(effectOn === false){
+            b3 = {x:182,y:98}
+        }else{
+            b3 = {x:176,y:95}
+        }
+        gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+            if(click === true){
+                menu.menuState = 3
+                playSound(sounds.click)
+                updateMenu(false);
+                return;
+            }
+        }
+    }
+    if(menu.menuState === 5){
+        let b3
+        if(effectOn === false){
+            b3 = {x:182,y:98}
+        }else{
+            b3 = {x:176,y:95}
+        }
+        gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+            if(click === true){
+                menu.menuState = 3
+                playSound(sounds.click)
+                updateMenu(false);
+                return;
+            }
+        }
+    }
+    if(menu.menuState === 6){
         let b3
         if(effectOn === false){
             b3 = {x:182,y:98}
