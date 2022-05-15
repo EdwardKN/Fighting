@@ -565,9 +565,9 @@ function updateMenu(click){
         }else{
             b3 = {x:176,y:95}
         }
-        gui.drawImage(knapp,10,36,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+        gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
-            gui.drawImage(knapp,0,36,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+            gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
             if(click === true){
                 menu.menuState = 3
                 resetStuff()        
@@ -636,15 +636,24 @@ function updateMenu(click){
                 updateMenu(false);
             }
         }
+        let b4 = {x:96-27,y:60}
+        gui.drawImage(knapp,0,36,59,9,b4.x*scale,b4.y*scale,54*scale,9*scale)
+        if(isIntersect(mouse.x,mouse.y,1,1,(b4.x+3)*scale,b4.y*scale,48*scale,9*scale)){
+            gui.drawImage(knapp,0,45,59,9,b4.x*scale,b4.y*scale,54*scale,9*scale)
+            if(click === true){
+                playSound(sounds.click)
+                updateMenu(false);
+            }
+        }
         let b3
         if(effectOn === false){
             b3 = {x:182,y:98}
         }else{
             b3 = {x:176,y:95}
         }
-        gui.drawImage(knapp,10,46,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+        gui.drawImage(knapp,10,64,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
-            gui.drawImage(knapp,0,46,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+            gui.drawImage(knapp,0,64,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
             if(click === true){
                 menu.menuState = 4
                 playSound(sounds.click)
@@ -660,9 +669,9 @@ function updateMenu(click){
         }else{
             b3 = {x:176,y:95}
         }
-        gui.drawImage(knapp,10,36,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+        gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
-            gui.drawImage(knapp,0,36,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
+            gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
             if(click === true){
                 menu.menuState = 3
                 playSound(sounds.click)
