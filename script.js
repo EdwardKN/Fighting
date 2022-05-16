@@ -3,15 +3,11 @@ var player1C = document.getElementById("player1")
 var player2C = document.getElementById("player2")
 var healthCanvasC = document.getElementById("health")
 var guiC = document.getElementById("gui")
-var effecC = document.getElementById("effect")
-var testC = document.getElementById("test")
-var test = testC.getContext("2d");
 
 var healthCanvas = healthCanvasC.getContext("2d");
 var bc = backCanvas.getContext("2d");
 
 var gui = guiC.getContext("2d");
-var effect = effecC.getContext("2d");
 
 var sounds = {
     punch : new Audio('Sounds/sounds/punch.mp3'),
@@ -51,11 +47,7 @@ healthCanvasC.width = 1920;
 healthCanvasC.height = 1080;
 guiC.width = 1920;
 guiC.height = 1080;
-effecC.width = 1920;
-effecC.height = 1080;
 
-testC.width = 1920;
-testC.height = 1080;
 
 document.width = 1920;
 document.height = 1080;
@@ -104,88 +96,6 @@ knapp.src = `Images/meny.png`
 
 var breakAnimate = false;
 
-var effectOn = false;
-
-window.addEventListener('load', function(){
-    
-    fakeCRT(testC)
-}, false);
-
-function addEffect(){
-    player1.canvas.clearRect(0,0,1920,1080);
-    player2.canvas.clearRect(0,0,1920,1080);
-    groundHeight-=30;
-    player1.y = groundHeight
-    player2.y = groundHeight
-    effectOn = true;
-    bc.clearRect(0,0,1920,1080)
-    bc.drawImage(backImg,0,0-30,1920,1080)
-
-    effect.globalAlpha = 0.2
-    effect.drawImage(scanlinesImg,0,0,800,192,0,0,1920,1080)
-    effect.globalAlpha = 1
-    effect.drawImage(bezelImg,0,0,1920,1080)
-    updateMenu()
-}
-
-function removeEffect(){
-    player1.canvas.clearRect(0,0,1920,1080);
-    player2.canvas.clearRect(0,0,1920,1080);
-    groundHeight+=30;
-    player1.y = groundHeight;
-    player2.y = groundHeight;
-    effectOn = false;
-    bc.clearRect(0,0,1920,1080)
-    bc.drawImage(backImg,0,0,1920,1080)
-
-    effect.clearRect(0,0,1920,1080)
-    updateMenu()
-
-}
-
-function fakeCRT(i) {
-    var glcanvas, source, texture, w, h, hw, hh, w75;
-    
-    try {
-        glcanvas = fx.canvas();
-    } catch (e) {return;}
-    
-
-    source = i;
-    srcctx = source.getContext('2d');
-    
-    texture = glcanvas.texture(source);
-    
-    w = source.width;
-    h = source.height;
-    hw = w / 2;
-    hh = h / 2;
-    w75 = w * 0.75;
-
-    source.parentNode.insertBefore(glcanvas, source);
-    source.style.display = 'none';
-    glcanvas.className = source.className;
-    glcanvas.id = source.id;
-    source.id = 'old_' + source.id;
-    
-    
-    setInterval(function () {
-    
-        texture.loadContentsOf(source);
-        if(effectOn === true){
-            glcanvas.draw(texture)
-            .bulgePinch(hw, hh, w75, 0.10)
-            .vignette(0.25, 0.6).noise(0.05).hueSaturation(0, -0.1)
-            .update();
-        }else{
-            glcanvas.draw(texture)
-            .bulgePinch(hw, hh, w75, 0)
-            .vignette(0, 0)
-            .update();
-        }
-        
-    }, Math.floor(1000 / 60));
-}
 
 healthCanvas.imageSmoothingEnabled = false;
 gui.imageSmoothingEnabled = false;
@@ -397,15 +307,7 @@ window.addEventListener("keydown",function(event){
 
 window.addEventListener("keyup",function(event){
 
-    if(event.code === "KeyO"){
-        if(effectOn === true){
-            removeEffect();
-            return;
-        }else{
-            addEffect();
-            return;
-        }
-    }
+    
     
     if(player1.dead === false && menu.menuState === 0 ||menu.menuState === 2){
         if(event.code === "KeyD" && player1.direction === 1){
@@ -541,12 +443,8 @@ function update(){
     gui.fillStyle = "white"
     gui.fillText("FPS:"+fps,50,40);
 
-    test.drawImage(backCanvas, 0, 0);
-    test.drawImage(player1C, 0, 0);
-    test.drawImage(player2C, 0, 0);
-    test.drawImage(healthCanvasC, 0, 0);
-    test.drawImage(guiC, 0, 0);
-    test.drawImage(effecC, 0, 0);
+
+    
 
 }
 
@@ -560,12 +458,8 @@ function updateMenu(click){
 
 
     if(menu.menuState === 0){
-        let b3
-        if(effectOn === false){
-            b3 = {x:182,y:98}
-        }else{
-            b3 = {x:176,y:95}
-        }
+        let b3 = {x:182,y:98}
+        
         gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
             gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
@@ -648,12 +542,8 @@ function updateMenu(click){
                 updateMenu(false);
             }
         }
-        let b3
-        if(effectOn === false){
-            b3 = {x:182,y:98}
-        }else{
-            b3 = {x:176,y:95}
-        }
+        let b3 = {x:182,y:98}
+        
         gui.drawImage(knapp,10,64,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
             gui.drawImage(knapp,0,64,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
@@ -666,12 +556,8 @@ function updateMenu(click){
         }
     }
     if(menu.menuState === 4){
-        let b3
-        if(effectOn === false){
-            b3 = {x:182,y:98}
-        }else{
-            b3 = {x:176,y:95}
-        }
+        let b3 = {x:182,y:98}
+        
         gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
             gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
@@ -684,12 +570,8 @@ function updateMenu(click){
         }
     }
     if(menu.menuState === 5){
-        let b3
-        if(effectOn === false){
-            b3 = {x:182,y:98}
-        }else{
-            b3 = {x:176,y:95}
-        }
+        let b3 = {x:182,y:98}
+        
         gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
             gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
@@ -702,12 +584,8 @@ function updateMenu(click){
         }
     }
     if(menu.menuState === 6){
-        let b3
-        if(effectOn === false){
-            b3 = {x:182,y:98}
-        }else{
-            b3 = {x:176,y:95}
-        }
+        let b3 = {x:182,y:98}
+        
         gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
             gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
@@ -984,7 +862,6 @@ function paintHealth(){
         player1.current = {x:1,y:2}
         updateMenu();
         player1.dead = true;
-        let effect = sounds.death.cloneNode()
         playSound(sounds.death)
         paintPlayer(player1)
     }
