@@ -601,7 +601,7 @@ function updateMenu(click){
 
 function moveRight(p){
     clearPlayer(p)
-    p.x += p.speed * fpsMultiplier;
+    p.x += p.speed;
     paintPlayer(p)
     if(p.x > (1920-(p.size*scale))){
         clearPlayer(p)
@@ -611,7 +611,7 @@ function moveRight(p){
 }
 function moveLeft(p){
     clearPlayer(p)
-    p.x -= p.speed  * fpsMultiplier;
+    p.x -= p.speed;
     paintPlayer(p)
 
     if(p.x < (10)){
@@ -632,8 +632,8 @@ function moveUp(p){
     if(p.direction === 2){
         p.current = {x:4,y:0};
     }
-    p.y -= p.momentumY  * fpsMultiplier;
-    p.momentumY -= p.gravity  * fpsMultiplier;
+    p.y -= p.momentumY ;
+    p.momentumY -= p.gravity;
     paintPlayer(p)
     if(p.y > groundHeight){
         
@@ -906,18 +906,17 @@ var interval1 = undefined;
 function updateFPS(thisFps) {
     clearInterval(interval1);
     interval1 = undefined;
-    interval1 = setInterval(update, 1000 / thisFps);
-    fpsMultiplier =  60 / thisFps;
+    fpsMultiplier =  thisFps / thisFps;
 }
 
 setInterval(() => {
-    fps = oldCount - oldCount3;
+    fps = (oldCount - oldCount3) * 2;
     oldCount3 = oldCount;
     if (fps !== oldFPS) {
         updateFPS(fps)
     }
     oldFPS = fps;
-}, 1000);
+}, 500);
 
 var oldFPS = 0;
 
@@ -929,7 +928,7 @@ count()
 
 function count() {
     requestAnimationFrame(count)
-
+    update()
     oldCount = oldCount2;
     oldCount2++;
     return oldCount;
