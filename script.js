@@ -107,6 +107,7 @@ var breakAnimate = false;
 var effectOn = false;
 
 window.addEventListener('load', function(){
+    
     fakeCRT(testC)
 }, false);
 
@@ -474,7 +475,7 @@ window.addEventListener("keyup",function(event){
 })
 
 function update(){
-
+    
 
 
     if(player1.direction === 1){
@@ -722,7 +723,7 @@ function updateMenu(click){
 
 function moveRight(p){
     clearPlayer(p)
-    p.x += p.speed;
+    p.x += p.speed * fpsMultiplier;
     paintPlayer(p)
     if(p.x > (1920-(p.size*scale))){
         clearPlayer(p)
@@ -732,7 +733,7 @@ function moveRight(p){
 }
 function moveLeft(p){
     clearPlayer(p)
-    p.x -= p.speed;
+    p.x -= p.speed  * fpsMultiplier;
     paintPlayer(p)
 
     if(p.x < (10)){
@@ -753,8 +754,8 @@ function moveUp(p){
     if(p.direction === 2){
         p.current = {x:4,y:0};
     }
-    p.y -= p.momentumY;
-    p.momentumY -= p.gravity;
+    p.y -= p.momentumY  * fpsMultiplier;
+    p.momentumY -= p.gravity  * fpsMultiplier;
     paintPlayer(p)
     if(p.y > groundHeight){
         
@@ -1029,7 +1030,7 @@ function updateFPS(thisFps) {
     clearInterval(interval1);
     interval1 = undefined;
     interval1 = setInterval(update, 1000 / thisFps);
-    fpsMultiplier = thisFps / 60;
+    fpsMultiplier =  60 / thisFps;
 }
 
 setInterval(() => {
