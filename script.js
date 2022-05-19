@@ -434,7 +434,7 @@ function updateMenu(click){
 
     }
     if(menu.menuState === 1){
-        png_font.drawText("Player 2 won!", [scale*20,scale*20], "black", scale, null,  false);
+        //png_font.drawText("Player 2 won!", [scale*20,scale*20], "black", scale, null,  false);
         let b1 = {x:96-14,y:36}
         gui.fillStyle = "white"
         gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
@@ -445,10 +445,10 @@ function updateMenu(click){
                 resetStuff()           
             }
         }
-        png_font.drawText("Reset", [scale*(96-13),scale*33], "black", scale, null,  false);
+        //png_font.drawText("Reset", [scale*(96-13),scale*33], "black", scale, null,  false);
     }
     if(menu.menuState === 2){
-        png_font.drawText("Player 1 won!", [scale*20,scale*20], "black", scale, null,  false);
+        //png_font.drawText("Player 1 won!", [scale*20,scale*20], "black", scale, null,  false);
         let b1 = {x:96-14,y:36}
         gui.fillStyle = "white"
         gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
@@ -459,7 +459,7 @@ function updateMenu(click){
                 resetStuff()           
             }
         }
-        png_font.drawText("Reset", [scale*(96-13),scale*33], "black", scale, null,  false);
+        //png_font.drawText("Reset", [scale*(96-13),scale*33], "black", scale, null,  false);
 
     }
     if(menu.menuState === 3){
