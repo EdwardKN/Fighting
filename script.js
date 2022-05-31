@@ -330,6 +330,7 @@ window.addEventListener("keydown",function(event){
 
     console.log(event)
     if(player1.dead === false&& menu.menuState === 0 ||menu.menuState === 2){
+        
         if(event.code === "KeyD" && player1.direction !== 1){
             player1.direction = 1;
             if(player1.crouching === false){
@@ -406,7 +407,8 @@ window.addEventListener("keyup",function(event){
             return;
         }
     }
-    
+
+
     if(player1.dead === false && menu.menuState === 0 ||menu.menuState === 2){
         if(event.code === "KeyD" && player1.direction === 1){
             clearPlayer(player1);
@@ -578,6 +580,7 @@ function updateMenu(click){
             }
         }
     }
+
     if(menu.menuState === 1){
         png_font.drawText("Player 2 won!", [scale*20,scale*20], "black", scale, null,  false);
         let b1 = {x:96-14,y:36}
@@ -683,6 +686,7 @@ function updateMenu(click){
             }
         }
     }
+
     if(menu.menuState === 5){
         let b3
         if(effectOn === false){
@@ -719,6 +723,7 @@ function updateMenu(click){
             }
         }
     }
+
 }
 
 function moveRight(p){
