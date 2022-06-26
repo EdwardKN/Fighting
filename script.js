@@ -293,7 +293,8 @@ reset()
 
 
 window.addEventListener("mousemove",function(event){
-    
+    document.body.style.cursor = "auto";
+
     mouse.x = event.x
     mouse.y = event.y
     if(menu !== undefined){
@@ -570,6 +571,8 @@ function updateMenu(click){
         }
         gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            document.body.style.cursor = "pointer";
+
             gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
             if(click === true){
                 menu.menuState = 3
@@ -587,6 +590,7 @@ function updateMenu(click){
         gui.fillStyle = "white"
         gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b1.x)*scale,b1.y*scale,40*scale,13*scale)){
+            document.body.style.cursor = "pointer";
             gui.fillStyle = "black"
             gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
             if(click === true){
@@ -604,6 +608,7 @@ function updateMenu(click){
         gui.fillStyle = "white"
         gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b1.x)*scale,b1.y*scale,40*scale,13*scale)){
+            document.body.style.cursor = "pointer";
             gui.fillStyle = "black"
             gui.fillRect(b1.x*scale,b1.y*scale,40*scale,13*scale)
             if(click === true){
@@ -622,6 +627,7 @@ function updateMenu(click){
         let b1 = {x:96-17,y:36}
         gui.drawImage(knapp,0,0,33,9,b1.x*scale,b1.y*scale,33*scale,9*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b1.x+3)*scale,b1.y*scale,27*scale,9*scale)){
+            document.body.style.cursor = "pointer";
             gui.drawImage(knapp,0,9,33,9,b1.x*scale,b1.y*scale,33*scale,9*scale)
             if(click === true){
                 playSound(sounds.click)
@@ -634,6 +640,7 @@ function updateMenu(click){
         let b2 = {x:96-27,y:48}
         gui.drawImage(knapp,0,18,54,9,b2.x*scale,b2.y*scale,54*scale,9*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b2.x+3)*scale,b2.y*scale,48*scale,9*scale)){
+            document.body.style.cursor = "pointer";
             gui.drawImage(knapp,0,27,54,9,b2.x*scale,b2.y*scale,54*scale,9*scale)
             if(click === true){
                 playSound(sounds.click)
@@ -644,6 +651,7 @@ function updateMenu(click){
         let b4 = {x:96-27,y:60}
         gui.drawImage(knapp,0,36,59,9,b4.x*scale,b4.y*scale,54*scale,9*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b4.x+3)*scale,b4.y*scale,48*scale,9*scale)){
+            document.body.style.cursor = "pointer";
             gui.drawImage(knapp,0,45,59,9,b4.x*scale,b4.y*scale,54*scale,9*scale)
             if(click === true){
                 playSound(sounds.click)
@@ -659,6 +667,7 @@ function updateMenu(click){
         }
         gui.drawImage(knapp,10,64,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            document.body.style.cursor = "pointer";
             gui.drawImage(knapp,0,64,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
             if(click === true){
                 menu.menuState = 4
@@ -677,6 +686,7 @@ function updateMenu(click){
         }
         gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            document.body.style.cursor = "pointer";
             gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
             if(click === true){
                 menu.menuState = 3
@@ -696,6 +706,7 @@ function updateMenu(click){
         }
         gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            document.body.style.cursor = "pointer";
             gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
             if(click === true){
                 menu.menuState = 3
@@ -714,6 +725,7 @@ function updateMenu(click){
         }
         gui.drawImage(knapp,10,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
         if(isIntersect(mouse.x,mouse.y,1,1,(b3.x)*scale,b3.y*scale,10*scale,10*scale)){
+            document.body.style.cursor = "pointer";
             gui.drawImage(knapp,0,54,10,10,b3.x*scale,b3.y*scale,10*scale,10*scale)
             if(click === true){
                 menu.menuState = 3
